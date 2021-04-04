@@ -9,11 +9,9 @@ public class Pipeline : FactoryObj
     public float moveDelay = 1f;
     private float timer = 0f;
 
-    public FactoryObj nextObj, previousObj;
-
     //can we send to this pipeline an item or not
-    public override bool IsFree 
-    { 
+    public override bool IsFree
+    {
         get { return itemToMove == null ? true : false; }
     }
 
@@ -41,10 +39,10 @@ public class Pipeline : FactoryObj
                     return;
                 }
 
-                if (previousObj)
+                if (previousObjs[0])
                 {
-                    print(previousObj.name + " now knows next is free.");
-                    previousObj.isNextObjFree = true;
+                    print(previousObjs[0].name + " now knows next is free.");
+                    previousObjs[0].isNextObjFree = true;
                 }
 
                 timer = 0f;
@@ -62,11 +60,11 @@ public class Pipeline : FactoryObj
             isNextObjFree = nextObj.IsFree;
 
             //purchaser queue fix
-            if (previousObj && previousObj.type == FactoryObjTypes.Purchaser
+            if (previousObjs[0] && previousObjs[0].type == FactoryObjTypes.Purchaser
                 && !isNextObjFree && itemToMove)
             {
                 print("Yep");
-                previousObj.isNextObjFree = false;
+                previousObjs[0].isNextObjFree = false;
             }
         }
         else
@@ -87,24 +85,40 @@ public class Pipeline : FactoryObj
 
             if (factoryObj)
             {
-                switch(factoryObj.type)
+                switch (factoryObj.type)
                 {
                     case FactoryObjTypes.Pipeline:
 
-                        Pipeline pipeline = (Pipeline)factoryObj;
-                        pipeline.previousObj = this;
-                        this.nextObj = pipeline;
+                        //Pipeline pipeline = (Pipeline)factoryObj;
+                        //pipeline.previousObjs[0] = this;
+                        //this.nextObj = pipeline;
+                        //GetNextObjectFreeInfo();
+
+                        factoryObj.previousObjs[0] = this;
+                        this.nextObj = factoryObj;
                         GetNextObjectFreeInfo();
 
                         break;
 
                     case FactoryObjTypes.Factory:
 
-                        Factory factory = (Factory)factoryObj;
-                        factory.previousObjs.Add(this);
-                        this.nextObj = factory;
+                        //Factory factory = (Factory)factoryObj;
+                        //factory.previousObjs.Add(this);
+                        //this.nextObj = factory;
+                        //GetNextObjectFreeInfo();
+
+                        factoryObj.previousObjs.Add(this);
+                        this.nextObj = factoryObj;
                         GetNextObjectFreeInfo();
                         //...
+
+                        break;
+
+                    case FactoryObjTypes.SellPort:
+
+                        factoryObj.previousObjs[0] = this;
+                        this.nextObj = factoryObj;
+                        GetNextObjectFreeInfo();
 
                         break;
                 }
@@ -129,21 +143,23 @@ public class Pipeline : FactoryObj
 
     private void OnDestroy()
     {
-        if (previousObj)
-        {
-            switch(previousObj.type)
-            {
-                case FactoryObjTypes.Purchaser:
-                    Purchaser purchaser = (Purchaser)previousObj;
-                    purchaser.pipeline = null;
-                    break;
+        //if (previousObjs[0])
+        //{
+        //    switch(previousObjs[0].type)
+        //    {
+        //        case FactoryObjTypes.Purchaser:
+        //            Purchaser purchaser = (Purchaser)previousObjs[0];
+        //            purchaser.pipeline = null;
+        //            break;
 
-                case FactoryObjTypes.Pipeline:
-                    Pipeline previousPipeline = (Pipeline)previousObj;
-                    previousPipeline.nextObj = null;
-                    break;
-            }
-        }
+        //        case FactoryObjTypes.Pipeline:
+        //            Pipeline previousPipeline = (Pipeline)previousObjs[0];
+        //            previousPipeline.nextObj = null;
+        //            break;
+        //    }
+        //}
+
+        DetachNextWithThis();
 
         Collider[] overlaps = Physics.OverlapBox(transform.position + Vector3.up / 2, Vector3.one / 2.05f);
         foreach (Collider overlap in overlaps)

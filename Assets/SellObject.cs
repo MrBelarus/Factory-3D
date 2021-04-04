@@ -113,6 +113,14 @@ public class SellObject : MonoBehaviour
             transform.position = target;
         }
 
+        //fix if user deletes deliver obj 
+        //and sellObj is reached deliver destination
+        if (deliver == null)
+        {
+            Destroy(gameObject);
+            yield break;
+        }
+
         //when object was tranported to deliver
         switch (deliver.type)
         {
@@ -128,7 +136,7 @@ public class SellObject : MonoBehaviour
                 factory.CheckIsReadyToProcess();
                 break;
 
-            case FactoryObjTypes.Seller:
+            case FactoryObjTypes.SellPort:
                 Seller seller = (Seller)deliver;
                 seller.SellObj(this);
                 break;

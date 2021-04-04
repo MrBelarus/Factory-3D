@@ -15,9 +15,6 @@ public class Factory : FactoryObj
 
     private bool itemToProduceWasChanged = false;   //IMPLEMENT WHEN WE HAVE USED THE UI CHANGE ITEM
 
-    public FactoryObj nextObj;
-    public List<FactoryObj> previousObjs =  new List<FactoryObj>();
-
     //container of objects (materials or components) to produce item
     private List<SellObject> factoryContainer = new List<SellObject>();
 
@@ -141,7 +138,7 @@ public class Factory : FactoryObj
             {
                 case FactoryObjTypes.Pipeline:
                     Pipeline pipeline = (Pipeline)factoryObj;
-                    pipeline.previousObj = this;
+                    pipeline.previousObjs[0] = this;
                     nextObj = pipeline;
                     isNextObjFree = pipeline.IsFree;
                     break;
@@ -153,7 +150,7 @@ public class Factory : FactoryObj
                     isNextObjFree = factory.IsFree;
                     break;
 
-                case FactoryObjTypes.Seller:
+                case FactoryObjTypes.SellPort:
                     nextObj = factoryObj;
                     isNextObjFree = factoryObj.IsFree;
                     break;
@@ -176,5 +173,10 @@ public class Factory : FactoryObj
                 nextObj = null;
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        DetachNextWithThis();
     }
 }

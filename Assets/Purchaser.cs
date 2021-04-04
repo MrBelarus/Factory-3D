@@ -27,7 +27,7 @@ public class Purchaser : FactoryObj
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            itemToPurchase = Resources.Load("Metal") as GameObject;
+            itemToPurchase = Resources.Load("Iron Ore") as GameObject;
 
             BuyMaterial(itemToPurchase);
         }
@@ -87,7 +87,7 @@ public class Purchaser : FactoryObj
             {
                 case FactoryObjTypes.Pipeline:
                     pipeline = (Pipeline)factoryObj;
-                    pipeline.previousObj = this;
+                    pipeline.previousObjs[0] = this;
                     isNextObjFree = pipeline.IsFree;
                     print("22+");
                     break;
@@ -108,6 +108,20 @@ public class Purchaser : FactoryObj
             if (factoryObj)
             {
                 pipeline = null;
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        DetachNextWithThis();
+
+        Collider[] overlaps = Physics.OverlapBox(transform.position + Vector3.up / 2, Vector3.one / 2.05f);
+        foreach (Collider overlap in overlaps)
+        {
+            if (overlap.CompareTag("SellObj"))
+            {
+                Destroy(overlap.gameObject);
             }
         }
     }

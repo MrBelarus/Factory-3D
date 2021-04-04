@@ -202,7 +202,7 @@ BoxCollider:
   m_GameObject: {fileID: 2357168207428603356}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -410,6 +410,50 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &8029616876839107924
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6634603593577839607}
+  - component: {fileID: 917117524235816473}
+  m_Layer: 10
+  m_Name: SelectiveCol
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6634603593577839607
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8029616876839107924}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6769353580297137484}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &917117524235816473
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8029616876839107924}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8222819016941653859
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,6 +486,7 @@ Transform:
   - {fileID: 4474628819095098102}
   - {fileID: 2852151064090939341}
   - {fileID: 7506910966932487298}
+  - {fileID: 6634603593577839607}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -458,13 +503,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+  prefabName: Pipeline
   cost: 0
+  nextObj: {fileID: 0}
+  previousObjs:
+  - {fileID: 0}
   isNextObjFree: 1
   ObjectMoveTime: 1.8
   itemToMove: {fileID: 0}
   moveDelay: 0
-  nextObj: {fileID: 0}
-  previousObj: {fileID: 0}
 --- !u!65 &1228530037804028793
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -474,7 +521,7 @@ BoxCollider:
   m_GameObject: {fileID: 8222819016941653859}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.25, y: 0.9, z: 0.15}
   m_Center: {x: 0, y: 0, z: 0.6}
