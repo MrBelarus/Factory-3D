@@ -161,6 +161,12 @@ public class Pipeline : FactoryObj
 
         DetachNextWithThis();
 
+        //purchaser fix
+        if (previousObjs[0] && previousObjs[0].type == FactoryObjTypes.Purchaser)
+        {
+            previousObjs[0].nextObj = null;
+        }
+
         Collider[] overlaps = Physics.OverlapBox(transform.position + Vector3.up / 2, Vector3.one / 2.05f);
         foreach (Collider overlap in overlaps)
         {

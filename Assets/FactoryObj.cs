@@ -6,7 +6,7 @@ public class FactoryObj : MonoBehaviour
 {
     public FactoryObjTypes type;
 
-    public string prefabName;   //takes enum [type] in Start method
+    public string prefabName;   //setups in editor for each obj
     public float cost;
     public FactoryObj nextObj;
     public List<FactoryObj> previousObjs = new List<FactoryObj>();
@@ -15,11 +15,6 @@ public class FactoryObj : MonoBehaviour
     public float ObjectMoveTime = 5f;
 
     virtual public bool IsFree { get; set; }
-
-    private void Start()
-    {
-        prefabName = type.ToString();
-    }
 
     public void DetachNextWithThis()
     {

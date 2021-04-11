@@ -28,32 +28,10 @@ public class Builder : MonoBehaviour
     private LayerMask ObstaclesLayer;
 
     [SerializeField]
+    private LayerMask SelectiveLayer;
+
+    [SerializeField]
     private LayerMask FactoryObjLayer;
-
-    //{
-    //    get
-    //    {
-    //        return Mode;
-    //    }
-    //    set
-    //    {
-    //        switch (value)
-    //        {
-    //            case Modes.Replace:
-    //                replaceMode = true;
-    //                deleteMode = false;
-    //                break;
-    //            case Modes.Delete:
-    //                deleteMode = true;
-    //                replaceMode = false;
-    //                break;
-    //            case Modes.Transform:
-
-    //            default:
-    //                break;
-    //        }
-    //    }
-    //}
 
     //Transform mode
     private Vector3 objectToTransformDefaultPos;
@@ -78,9 +56,6 @@ public class Builder : MonoBehaviour
 
         Mode = Modes.Undefined;
         cameraMain = Camera.main;
-
-        ////Interface to UI Manager
-        //CreateObjToReplace();   //temp
     }
 
     //check the player's input
@@ -88,87 +63,42 @@ public class Builder : MonoBehaviour
     {
         bool LMBPressed = Input.GetMouseButtonDown(0);
 
-        if (LMBPressed && Mode == Modes.Buy)    //replace obj
+        if (LMBPressed)
         {
-            Collider[] overlaps = Physics.OverlapBox(objectToReplace.transform.position,
-                Vector3.one / 2.05f, Quaternion.identity, ObstaclesLayer.value);
-            print(overlaps.Length);
-
-            if (overlaps.Length > 0)
+            switch (Mode)
             {
-                for (int i = 0; i < overlaps.Length; i++)
-                {
-                    if (1 << overlaps[i].gameObject.layer == FactoryObjLayer.value)
+                case Modes.Buy:
+                    if (CanIReplaceIt())
                     {
-                        if (overlaps[i].transform.position != objectToReplace.transform.position
-                            && overlaps[i].transform.forward == -objectToReplace.transform.forward)
-                        {
-                            //TODO: can't replace UI title
-                            print("Ты дурак?!");
-                        }
-                        else if (overlaps[i].transform.position != objectToReplace.transform.position)
-                        {
-                            ReplaceObj();
-                            CreateObjToReplace();
-                            //TODO: -money
-                        }
+                        ReplaceObj();
+                        CreateObjToReplace();
                     }
-                }
-            }
-            else
-            {
-                ReplaceObj();
-                CreateObjToReplace();
-                //TODO: -money
-            }
-        }
-        else if (LMBPressed && Mode == Modes.Delete)
-        {
-            RaycastHit hit;
-            Ray ray = cameraMain.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, maxRayDistance, FactoryObjLayer))
-            {
-                //TODO: UI? - do u realy want to remove it
+                    break;
 
-                //TODO: Game manager? - add sell cost to player pocket
-
-                Destroy(hit.collider.transform.root.gameObject);
-            }
-        }
-        else if (LMBPressed && Mode == Modes.Transform)
-        {
-            Collider[] overlaps = Physics.OverlapBox(objectToReplace.transform.position,
-                Vector3.one / 2.05f, Quaternion.identity, ObstaclesLayer.value);
-            print(overlaps.Length);
-
-            if (overlaps.Length > 0)
-            {
-                for (int i = 0; i < overlaps.Length; i++)
-                {
-                    if (1 << overlaps[i].gameObject.layer == FactoryObjLayer.value)
+                case Modes.Delete:
+                    RaycastHit hit;
+                    Ray ray = cameraMain.ScreenPointToRay(Input.mousePosition);
+                    if (Physics.Raycast(ray, out hit, maxRayDistance, FactoryObjLayer))
                     {
-                        bool overlapsFactory = overlaps[i].name == "base";
+                        //TODO: UI? - do u realy want to remove it
+                        //TODO: Game manager? - add sell cost to player pocket
 
-                        if (!overlapsFactory
-                            && overlaps[i].transform.forward == -objectToReplace.transform.forward)
-                        {
-                            //TODO: can't replace UI title
-                            print("Ты дурак?!");
-                        }
-                        else if (!overlapsFactory)    //base - rigidbody+collider (not trigger)
-                        {
-                            ReplaceObj();
-                            objectToReplace = null;
-                            this.enabled = false;
-                        }
+                        Destroy(hit.collider.transform.root.gameObject);
                     }
-                }
-            }
-            else
-            {
-                ReplaceObj();
-                objectToReplace = null;
-                this.enabled = false;
+                    break;
+
+                case Modes.Transform:
+                    if (CanIReplaceIt())
+                    {
+                        ReplaceObj();
+                        objectToReplace = null;
+                        this.enabled = false;
+                    }
+                    break;
+
+                default:
+                    Debug.LogError("smth went wrong in builder");
+                    break;
             }
         }
 
@@ -198,7 +128,6 @@ public class Builder : MonoBehaviour
             objectToReplace = null;
             this.enabled = false;
         }
-
         if (Input.GetKeyDown(KeyCode.R))
         {
             if (objectToReplace)
@@ -283,6 +212,49 @@ public class Builder : MonoBehaviour
         {
             col.enabled = true;
         }
+    }
+
+    private bool CanIReplaceIt()
+    {
+        Collider selectiveCol = objectToReplace.transform.Find("SelectiveCol").GetComponent<BoxCollider>();
+
+        Vector3 objSize = new Vector3(selectiveCol.bounds.size.x, 1f, selectiveCol.bounds.size.z);
+        Vector3 objCenter = selectiveCol.transform.position;
+
+        Collider[] overlaps = Physics.OverlapBox(objCenter,
+            objSize / 2.05f, Quaternion.identity, ObstaclesLayer.value);
+
+        for (int i = 0; i < overlaps.Length; i++)
+        {
+            if (1 << overlaps[i].gameObject.layer == SelectiveLayer.value &&
+                overlaps[i] != selectiveCol)    //ignore itself col
+            {
+                return false;
+            }
+        }
+
+        for (int i = 0; i < overlaps.Length; i++)
+        {
+            if (1 << overlaps[i].gameObject.layer == FactoryObjLayer.value)
+            {
+                if (overlaps[i].transform.position != objectToReplace.transform.position
+                    && overlaps[i].transform.forward == -objectToReplace.transform.forward)
+                {
+                    return false;
+                }
+                else if (overlaps[i].transform.position != objectToReplace.transform.position)
+                {
+                    if (overlaps[i].transform.root.GetComponent<FactoryObj>().type == FactoryObjTypes.Purchaser
+                        && objectToReplace.GetComponent<FactoryObj>().type != FactoryObjTypes.Pipeline)
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        }
+
+        return true;
     }
 
     public void BuyFactoryObj(GameObject prefab)

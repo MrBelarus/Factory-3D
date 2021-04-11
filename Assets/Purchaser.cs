@@ -13,8 +13,6 @@ public class Purchaser : FactoryObj
 
     public Queue<GameObject> purchaseQueue;
 
-    public Pipeline pipeline;       //game rule is to connect Purchaser with at least 1 pipeline!
-
     private void Awake()
     {
         this.type = FactoryObjTypes.Purchaser;
@@ -37,14 +35,14 @@ public class Purchaser : FactoryObj
     {
         if (isNextObjFree && purchaseQueue.Count > 0)
         {
-            if (timer >= timeToPurchaseItem && pipeline)
+            if (timer >= timeToPurchaseItem && nextObj)
             {
                 print("It's purchased!");
 
                 itemToPurchase = purchaseQueue.Dequeue();   //inqueue if we have itemToPurchase but timer < timeToPurchaseItem
 
                 GameObject purchasedItem = Instantiate(itemToPurchase, objSpawnPoint.position, itemToPurchase.transform.rotation);
-                purchasedItem.GetComponent<SellObject>().MoveTo(transform.forward, pipeline, ObjectMoveTime);
+                purchasedItem.GetComponent<SellObject>().MoveTo(transform.forward, nextObj, ObjectMoveTime);
 
                 if (purchaseQueue.Count == 0)
                 {
@@ -86,14 +84,13 @@ public class Purchaser : FactoryObj
             switch (factoryObj.type)
             {
                 case FactoryObjTypes.Pipeline:
-                    pipeline = (Pipeline)factoryObj;
-                    pipeline.previousObjs[0] = this;
-                    isNextObjFree = pipeline.IsFree;
-                    print("22+");
+                    nextObj = factoryObj;
+                    nextObj.previousObjs[0] = this;
+                    isNextObjFree = nextObj.IsFree; //TODO: тут может быть фикс
                     break;
 
                 default:
-                    Debug.LogError("Game can connect purchaser just with pipeline!");
+                    Debug.LogError("error connection! [purchase can connect only with pipeline]");
                     break;
             }
         }
@@ -107,7 +104,7 @@ public class Purchaser : FactoryObj
             print("Удалили объект после продавщика");
             if (factoryObj)
             {
-                pipeline = null;
+                nextObj = null;
             }
         }
     }
@@ -125,12 +122,4 @@ public class Purchaser : FactoryObj
             }
         }
     }
-
-    ////temp
-    //private void OnMouseDown()
-    //{
-    //    print("+");
-    //    //open purchase menu to buy objs[use queue]/setup purchaser
-    //    //change obj to purchase
-    //}
 }

@@ -13,24 +13,24 @@ public enum Stages
 public enum Materials   //fromPurchaser stage 
 {
     Undefined,
-    Plastic,
-    Water,
-    IronOre,
-    Sand,
-    Rubber,
-    Bottle,
-    GlassBottle,
-    Glass,
-    Metal,
-    Gear,
+    Plastic,		
+    Water,			//model
+    IronOre,		
+    Sand,			
+    Rubber,			
+    Bottle,			//model
+    GlassBottle,	
+    Glass,			
+    Metal,			
+    Gear,			
 };
 public enum FinalItems   //finish processed stage 
 {
     Undefined,
-    Car,
-    Soda,
-    Clock,
-    Toy,
+    Car,			//model
+    Soda,			//model
+    Clock,			
+    Toy,			//model
 }
 
 [RequireComponent(typeof(Rigidbody))]
