@@ -27,7 +27,8 @@ public class FactoryObj : MonoBehaviour
                 {
                     nextObj.previousObjs[i] = null;
 
-                    if (nextObj.type == FactoryObjTypes.Factory)
+                    if (nextObj.type == FactoryObjTypes.Factory
+                        || nextObj.type == FactoryObjTypes.Pipeline)
                     {
                         nextObj.previousObjs.RemoveAt(i);
                     }

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class GameUIManager : MonoBehaviour
 {
-    public static UIManager instance;
+    public static GameUIManager instance;
 
     [Header("Buttons:")]
     [SerializeField] private Button DestroyButton;
@@ -21,6 +21,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject FactoryMenu;
     [SerializeField] private GameObject PipelineMenu;
     [SerializeField] private GameObject PurchaserMenu;
+
+    private FactoryMenuHandler factoryMenuHandler;
+    private PurchaserMenuHandler purchaserMenuHandler;
+    //private PipelineMenuHandler pipelineMenuHandler;
 
     [Header("Detect layers:")]
     [SerializeField] private LayerMask FactoryObjLayer;
@@ -51,6 +55,9 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        factoryMenuHandler = FactoryMenu.GetComponent<FactoryMenuHandler>();
+        purchaserMenuHandler = PurchaserMenu.GetComponent<PurchaserMenuHandler>();
+
         builder = Builder.instance;
         mainCamera = Camera.main;
     }
@@ -85,11 +92,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void SetUpAndOpenObjMenu(GameObject obj, FactoryObj script)
+    private void SetUpAndOpenObjMenu(GameObject obj, FactoryObj factoryObj)
     {
         //TODO: factory menus setup
 
-        switch (script.type)
+        switch (factoryObj.type)
         {
             case FactoryObjTypes.Pipeline:
                 activeMenu = PipelineMenu;
@@ -97,11 +104,13 @@ public class UIManager : MonoBehaviour
                 break;
 
             case FactoryObjTypes.Factory:
+                factoryMenuHandler.SetUpMenu((Factory)factoryObj);
                 activeMenu = FactoryMenu;
 
                 break;
 
             case FactoryObjTypes.Purchaser:
+                purchaserMenuHandler.SetUpMenu((Purchaser)factoryObj);
                 activeMenu = PurchaserMenu;
 
                 break;
@@ -117,6 +126,9 @@ public class UIManager : MonoBehaviour
         }
 
         activeMenu.SetActive(true);
+
+        //freeze time to prevent any issues
+        Time.timeScale = 0f;
     }
 
     private void SetUpAndOpenObjMenu(GameObject obj, SellObject script)
@@ -126,6 +138,12 @@ public class UIManager : MonoBehaviour
         //TODO: sellObj menu setup
 
         activeMenu.SetActive(true);
+    }
+
+    public void CloseObjMenu()  //Button event
+    {
+        activeMenu.SetActive(false);
+        Time.timeScale = 1f;
     }
 
     #region Events
@@ -159,7 +177,7 @@ public class UIManager : MonoBehaviour
         builder.enabled = true;
 
         selectedObj = null;
-        activeMenu.SetActive(false);
+        CloseObjMenu();
     }
 
     public void OnDeleteClick()
@@ -174,7 +192,7 @@ public class UIManager : MonoBehaviour
         }
 
         selectedObj = null;
-        activeMenu.SetActive(false);
+        CloseObjMenu();
     }
 
     private void AddListenersButton()

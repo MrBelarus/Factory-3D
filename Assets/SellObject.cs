@@ -81,6 +81,11 @@ public class SellObject : MonoBehaviour
                     return false;
                 }
             }
+            else if (deliver.type == FactoryObjTypes.Pipeline)
+            {
+                Pipeline pipeline = (Pipeline)deliver;
+                pipeline.isRecievingItem = true;
+            }
 
             StopAllCoroutines();
             StartCoroutine(MoveObj(direction, deliver, transportTime));
@@ -127,6 +132,7 @@ public class SellObject : MonoBehaviour
             case FactoryObjTypes.Pipeline:
                 Pipeline pipeline = (Pipeline)deliver;
                 pipeline.itemToMove = this;
+                pipeline.isRecievingItem = false;
                 pipeline.GetNextObjectFreeInfo();
                 break;
 

@@ -64,7 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stage: 1
   material: 9
-  canBeCreatedWith: 0300000003000000
+  canBeCreatedWith: 030000000300000003000000
   transformComponent: {fileID: 0}
   cost: 25
   timeToProduce: 2

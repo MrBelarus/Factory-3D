@@ -33,24 +33,28 @@ public class CameraMovement : MonoBehaviour
     private Vector3 cameraRightDirection;
 
     private Camera cameraScript;
+    private Rigidbody rb;
 
     private float deltaX, deltaY;
 
     [SerializeField]
     private float edgeBorderScreenX = 50f, edgeBorderScreenY = 50f;
+    [SerializeField]
+    private float borderCameraSpeed = 0.1f;
 
     private float screenWidth, screenHeight;
     private bool lockBorderMovement = false;
 
     private float mousePosMotionCoef = 1; //where to go camera (up/right = 1, down/left = -1)
-    private float borderCameraSpeed = 0.1f;
     private Vector3 mousePos;
 
     private void Awake()
     {
         cameraScript = Camera.main;
         cameraTransform = cameraScript.transform;
-        
+
+        rb = GetComponent<Rigidbody>();
+
         screenWidth = Screen.width;
         screenHeight = Screen.height;
 
@@ -134,7 +138,8 @@ public class CameraMovement : MonoBehaviour
                 mousePosMotionCoef = mousePos.x < 0f ? -1 : -(1 - Mathf.Abs(mousePos.x) / edgeBorderScreenX);
             }
 
-            cameraTransform.position += borderCameraSpeed * cameraRightDirection * mousePosMotionCoef;
+            rb.MovePosition(cameraTransform.position += Time.deltaTime * borderCameraSpeed 
+                * cameraRightDirection * mousePosMotionCoef);
         }
 
         if (mousePos.y < edgeBorderScreenY
@@ -149,7 +154,8 @@ public class CameraMovement : MonoBehaviour
                 mousePosMotionCoef = mousePos.y < 0f ? -1 : -(1 - Mathf.Abs(mousePos.y) / edgeBorderScreenY);
             }
 
-            cameraTransform.position += borderCameraSpeed * cameraFowardDirection * mousePosMotionCoef;
+            rb.MovePosition(cameraTransform.position += Time.deltaTime * borderCameraSpeed 
+                * cameraFowardDirection * mousePosMotionCoef);
         }
 
         CheckWorldBorders();

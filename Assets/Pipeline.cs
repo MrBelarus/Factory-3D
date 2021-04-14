@@ -9,10 +9,12 @@ public class Pipeline : FactoryObj
     public float moveDelay = 1f;
     private float timer = 0f;
 
+    public bool isRecievingItem = false;
+
     //can we send to this pipeline an item or not
     public override bool IsFree
     {
-        get { return itemToMove == null ? true : false; }
+        get { return itemToMove == null && !isRecievingItem; }
     }
 
     private void Awake()
@@ -28,6 +30,12 @@ public class Pipeline : FactoryObj
             {
                 print(itemToMove.name + " transporting by " + gameObject.name);
 
+                isNextObjFree = nextObj.IsFree;
+                if (!isNextObjFree)
+                {
+                    print("Ops, I have to wait - " + this.name);
+                    return;
+                }
 
                 if (itemToMove.MoveTo(transform.forward, nextObj, ObjectMoveTime))
                 {
@@ -39,10 +47,15 @@ public class Pipeline : FactoryObj
                     return;
                 }
 
-                if (previousObjs[0])
+                //if (previousObjs[0])
+                //{
+                //    print(previousObjs[0].name + " now knows next is free.");
+                //    previousObjs[0].isNextObjFree = true;
+                //}
+
+                for (int i = 0; i < previousObjs.Count; i++)
                 {
-                    print(previousObjs[0].name + " now knows next is free.");
-                    previousObjs[0].isNextObjFree = true;
+                    previousObjs[i].isNextObjFree = true;
                 }
 
                 timer = 0f;
@@ -58,14 +71,6 @@ public class Pipeline : FactoryObj
         if (nextObj)
         {
             isNextObjFree = nextObj.IsFree;
-
-            //purchaser queue fix
-            if (previousObjs[0] && previousObjs[0].type == FactoryObjTypes.Purchaser
-                && !isNextObjFree && itemToMove)
-            {
-                print("Yep");
-                previousObjs[0].isNextObjFree = false;
-            }
         }
         else
         {
@@ -94,7 +99,8 @@ public class Pipeline : FactoryObj
                         //this.nextObj = pipeline;
                         //GetNextObjectFreeInfo();
 
-                        factoryObj.previousObjs[0] = this;
+                        //factoryObj.previousObjs[0] = this;
+                        factoryObj.previousObjs.Add(this);
                         this.nextObj = factoryObj;
                         GetNextObjectFreeInfo();
 
@@ -162,10 +168,10 @@ public class Pipeline : FactoryObj
         DetachNextWithThis();
 
         //purchaser fix
-        if (previousObjs[0] && previousObjs[0].type == FactoryObjTypes.Purchaser)
-        {
-            previousObjs[0].nextObj = null;
-        }
+        //if (previousObjs[0] && previousObjs[0].type == FactoryObjTypes.Purchaser)
+        //{
+        //    previousObjs[0].nextObj = null;
+        //}
 
         Collider[] overlaps = Physics.OverlapBox(transform.position + Vector3.up / 2, Vector3.one / 2.05f);
         foreach (Collider overlap in overlaps)

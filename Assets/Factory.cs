@@ -6,9 +6,6 @@ using UnityEngine;
 public class Factory : FactoryObj
 {
     public SellObject whatNeedToProduce;//what we should get after process iterations
-    
-    //!!! will changes by UI if we change whatNeedToProduce!
-    public int amountOfItemsToProduceOne = 1;   //depends on count of sell object material list to create it!
 
     private GameObject processResult;
     public Transform processedObjSpawnPoint;
@@ -17,6 +14,7 @@ public class Factory : FactoryObj
 
     //container of objects (materials or components) to produce item
     private List<SellObject> factoryContainer = new List<SellObject>();
+    public int MaterialsAmountIn { get { return factoryContainer.Count; } }
 
     private bool isBusy = false;
     private bool readyToProcess = false;
@@ -70,7 +68,7 @@ public class Factory : FactoryObj
 
     public void CheckIsReadyToProcess()
     {
-        if (factoryContainer.Count == amountOfItemsToProduceOne)
+        if (factoryContainer.Count == whatNeedToProduce.canBeCreatedWith.Count)
         {
             readyToProcess = true;
         }
@@ -122,6 +120,11 @@ public class Factory : FactoryObj
         return false;
     }
 
+    public void ClearFactoryQueue()
+    {
+        factoryContainer.Clear();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.parent)
@@ -138,7 +141,7 @@ public class Factory : FactoryObj
             {
                 case FactoryObjTypes.Pipeline:
                     Pipeline pipeline = (Pipeline)factoryObj;
-                    pipeline.previousObjs[0] = this;
+                    pipeline.previousObjs.Add(this);
                     nextObj = pipeline;
                     isNextObjFree = pipeline.IsFree;
                     break;

@@ -486,12 +486,12 @@ MonoBehaviour:
   prefabName: Pipeline
   cost: 0
   nextObj: {fileID: 0}
-  previousObjs:
-  - {fileID: 0}
+  previousObjs: []
   isNextObjFree: 1
-  ObjectMoveTime: 1.8
+  ObjectMoveTime: 1
   itemToMove: {fileID: 0}
   moveDelay: 0
+  isRecievingItem: 0
 --- !u!65 &1228530037804028793
 BoxCollider:
   m_ObjectHideFlags: 0

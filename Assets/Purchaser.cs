@@ -11,7 +11,10 @@ public class Purchaser : FactoryObj
     public float timeToPurchaseItem;
     private float timer = 0f;
 
-    public Queue<GameObject> purchaseQueue;
+    public bool AutoBuy { set; get; }
+
+    private Queue<GameObject> purchaseQueue;
+    public int PurchaseQueueCount { get { return purchaseQueue.Count; } }
 
     private void Awake()
     {
@@ -37,8 +40,14 @@ public class Purchaser : FactoryObj
         {
             if (timer >= timeToPurchaseItem && nextObj)
             {
-                print("It's purchased!");
+                isNextObjFree = nextObj.IsFree;
+                if(!isNextObjFree)
+                {
+                    print("+");
+                    return;
+                }
 
+                print("It's purchased!");
                 itemToPurchase = purchaseQueue.Dequeue();   //inqueue if we have itemToPurchase but timer < timeToPurchaseItem
 
                 GameObject purchasedItem = Instantiate(itemToPurchase, objSpawnPoint.position, itemToPurchase.transform.rotation);
@@ -69,6 +78,11 @@ public class Purchaser : FactoryObj
         //}
     }
 
+    public void ClearPurchaseQueue()
+    {
+        purchaseQueue.Clear();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.parent)
@@ -85,7 +99,7 @@ public class Purchaser : FactoryObj
             {
                 case FactoryObjTypes.Pipeline:
                     nextObj = factoryObj;
-                    nextObj.previousObjs[0] = this;
+                    nextObj.previousObjs.Add(this);
                     isNextObjFree = nextObj.IsFree; //TODO: тут может быть фикс
                     break;
 
