@@ -13,23 +13,23 @@ public enum Stages
 public enum Materials   //fromPurchaser stage 
 {
     Undefined,
-    Plastic,		
-    Water,			//model
-    IronOre,		
-    Sand,			
-    Rubber,			
-    Bottle,			//model
-    GlassBottle,	
-    Glass,			
-    Metal,			
-    Gear,			
+    Plastic,		//model ..
+    Water,			//model ..
+    IronOre,		//model ..
+    Sand,			//model ..
+    Rubber,			//model ..
+    Bottle,			//model ..
+    GlassBottle,	//model ..
+    Glass,			//model ..
+    Metal,			//model ..
+    Gear,			//model 
 };
 public enum FinalItems   //finish processed stage 
 {
-    Undefined,
+    Undefined,		
     Car,			//model
-    Soda,			//model
-    Clock,			
+    Soda,			//model ++ / ++
+    Clock,			//model
     Toy,			//model
 }
 

@@ -33,7 +33,7 @@ public class GameUIManager : MonoBehaviour
 
     private GameObject selectedObj; //by LMB without builder enabled
     private Builder builder;
-
+    
     [Header("Raycast settings")]
     public float rayDistance = 500f;
     private Camera mainCamera;

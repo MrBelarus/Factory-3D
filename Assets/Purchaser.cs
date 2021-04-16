@@ -11,6 +11,7 @@ public class Purchaser : FactoryObj
     public float timeToPurchaseItem;
     private float timer = 0f;
 
+    public List<Materials> AvailableMaterials;
     public bool AutoBuy { set; get; }
 
     private Queue<GameObject> purchaseQueue;
@@ -28,7 +29,7 @@ public class Purchaser : FactoryObj
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            itemToPurchase = Resources.Load("Iron Ore") as GameObject;
+            itemToPurchase = Resources.Load("IronOre") as GameObject;
 
             BuyMaterial(itemToPurchase);
         }

@@ -38,7 +38,7 @@ public class CameraMovement : MonoBehaviour
     private float deltaX, deltaY;
 
     [SerializeField]
-    private float edgeBorderScreenX = 50f, edgeBorderScreenY = 50f;
+    private float edgeBorderScreenX = 10f, edgeBorderScreenY = 10f;
     [SerializeField]
     private float borderCameraSpeed = 0.1f;
 

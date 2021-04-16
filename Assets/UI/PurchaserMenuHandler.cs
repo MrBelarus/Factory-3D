@@ -12,17 +12,14 @@ public class PurchaserMenuHandler : MonoBehaviour
     [SerializeField] private Image AutoBuyCheckMark;
     [SerializeField] private Sprite questionSprite;
 
+    [SerializeField] private MaterialsMenu materialsMenu;
+
     private Purchaser purchaser;
 
     public void SetUpMenu(Purchaser purchaser)
     {
-        //factoryName.text = factory.prefabName;
-        //materialsInQueueCount.text = factory.MaterialsAmountIn.ToString();
-        //itemToProduceName.text = factory.whatNeedToProduce.name;
-        //itemToProduceImage.sprite = Resources.Load<Sprite>("UISprites/" + factory.whatNeedToProduce.name);
-
         itemToBuyName.text = purchaser.itemToPurchase == null ? "Nothing" : purchaser.itemToPurchase.name;
-        itemToBuyImage.sprite = purchaser.itemToPurchase == null ? questionSprite : 
+        itemToBuyImage.sprite = purchaser.itemToPurchase == null ? questionSprite :
             Resources.Load<Sprite>("UISprites/" + purchaser.itemToPurchase.name);
 
         buyButtons.SetActive(purchaser.itemToPurchase != null);
@@ -40,19 +37,41 @@ public class PurchaserMenuHandler : MonoBehaviour
         }
 
         purchaser.BuyMaterial(purchaser.itemToPurchase);
+        BoughtObjsQueue.text = purchaser.PurchaseQueueCount.ToString();
     }
 
-    public void ChangeItemToPurchase(SellObject sellObject)
+    public void OpenPurchaserItemsMenu()    //вызов метода по клику на кнопку "Item To Buy"
     {
-        //itemToProduceImage.sprite = Resources.Load<Sprite>("UISprites/" + sellObject.name);
-        //itemToProduceName.text = sellObject.name;
-        //factory.whatNeedToProduce = sellObject;
+        materialsMenu.UpdateButtons(purchaser.AvailableMaterials);
 
+        List<Button> buttons = materialsMenu.buttons;
+
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            int copy = i;   //event arguments fix
+            buttons[i].onClick.AddListener(() => { ChangeItemToPurchase(copy); });
+        }
+
+        materialsMenu.gameObject.SetActive(true);
+    }
+
+    public void ChangeItemToPurchase(int materialIndex)
+    {
+        SellObject sellObject = Resources.Load<SellObject>(purchaser.AvailableMaterials[materialIndex].ToString());
         purchaser.itemToPurchase = sellObject.gameObject;
+
+        buyButtons.SetActive(true);
+        AutoBuyCheckMark.gameObject.SetActive(purchaser.AutoBuy);
+
+        itemToBuyName.text = purchaser.itemToPurchase.name;
+        itemToBuyImage.sprite = Resources.Load<Sprite>("UISprites/" + purchaser.itemToPurchase.name);
+
+        materialsMenu.gameObject.SetActive(false);
     }
 
     public void ClearPurchaseQueue() //on Button event
     {
         purchaser.ClearPurchaseQueue();
+        BoughtObjsQueue.text = "0";
     }
 }
