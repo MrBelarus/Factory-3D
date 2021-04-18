@@ -51,7 +51,7 @@ public class Purchaser : FactoryObj
                 print("It's purchased!");
                 itemToPurchase = purchaseQueue.Dequeue();   //inqueue if we have itemToPurchase but timer < timeToPurchaseItem
 
-                GameObject purchasedItem = Instantiate(itemToPurchase, objSpawnPoint.position, itemToPurchase.transform.rotation);
+                GameObject purchasedItem = Instantiate(itemToPurchase, objSpawnPoint.position, objSpawnPoint.rotation);
                 purchasedItem.GetComponent<SellObject>().MoveTo(transform.forward, nextObj, ObjectMoveTime);
 
                 if (purchaseQueue.Count == 0)

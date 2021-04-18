@@ -8,6 +8,7 @@ public class FactoryObj : MonoBehaviour
 
     public string prefabName;   //setups in editor for each obj
     public float cost;
+
     public FactoryObj nextObj;
     public List<FactoryObj> previousObjs = new List<FactoryObj>();
 
@@ -15,6 +16,18 @@ public class FactoryObj : MonoBehaviour
     public float ObjectMoveTime = 5f;
 
     virtual public bool IsFree { get; set; }
+
+    [SerializeField] private GameObject[] directionArrows;
+    public bool DirectionArrows
+    {
+        set
+        {
+            for (int i = 0; i < directionArrows.Length; i++)
+            {
+                directionArrows[i].SetActive(value);
+            }
+        }
+    }
 
     public void DetachNextWithThis()
     {
