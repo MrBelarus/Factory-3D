@@ -331,6 +331,8 @@ MonoBehaviour:
   previousObjs: []
   isNextObjFree: 1
   ObjectMoveTime: 1.8
+  directionArrows:
+  - {fileID: 9013222874841507264}
   itemToPurchase: {fileID: 0}
   objSpawnPoint: {fileID: 4996027350302223343}
   timeToPurchaseItem: 2
@@ -571,6 +573,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ccb78fa6bf15dc49b368398e000915b, type: 3}
+--- !u!1 &9013222874841507264 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3278117316192377155, guid: 1ccb78fa6bf15dc49b368398e000915b,
+    type: 3}
+  m_PrefabInstance: {fileID: 5794813477934496899}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8529455816450391930 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2753360700721349625, guid: 1ccb78fa6bf15dc49b368398e000915b,

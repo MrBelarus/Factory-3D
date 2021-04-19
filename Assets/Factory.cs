@@ -20,6 +20,11 @@ public class Factory : FactoryObj
     private bool readyToProcess = false;
     public override bool IsFree { get { return !isBusy; } }
 
+    protected new void Start()
+    {
+        base.Start();
+    }
+
     private void FixedUpdate()
     {
         if (readyToProcess && !isBusy)
@@ -178,8 +183,10 @@ public class Factory : FactoryObj
         }
     }
 
-    private void OnDestroy()
+    private new void OnDestroy()
     {
+        base.OnDestroy();
+
         DetachNextWithThis();
     }
 }

@@ -219,6 +219,8 @@ MonoBehaviour:
   previousObjs: []
   isNextObjFree: 1
   ObjectMoveTime: 1
+  directionArrows:
+  - {fileID: 1313735961312923656}
   itemToMove: {fileID: 0}
   moveDelay: 0
   isRecievingItem: 0
@@ -335,6 +337,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ccb78fa6bf15dc49b368398e000915b, type: 3}
+--- !u!1 &1313735961312923656 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3278117316192377155, guid: 1ccb78fa6bf15dc49b368398e000915b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4559162011971389771}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1833109401855511218 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2753360700721349625, guid: 1ccb78fa6bf15dc49b368398e000915b,

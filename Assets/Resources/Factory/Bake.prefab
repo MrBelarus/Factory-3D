@@ -117,6 +117,8 @@ MonoBehaviour:
   previousObjs: []
   isNextObjFree: 1
   ObjectMoveTime: 1.8
+  directionArrows:
+  - {fileID: 5420449208238613154}
   whatNeedToProduce: {fileID: 1622317414031837238, guid: b642245d99aeccc4b9b26fb75df958ac,
     type: 3}
   processedObjSpawnPoint: {fileID: 4829086410908640914}
@@ -457,6 +459,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ccb78fa6bf15dc49b368398e000915b, type: 3}
+--- !u!1 &5420449208238613154 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3278117316192377155, guid: 1ccb78fa6bf15dc49b368398e000915b,
+    type: 3}
+  m_PrefabInstance: {fileID: 7369995116706544609}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4643947315611858968 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2753360700721349625, guid: 1ccb78fa6bf15dc49b368398e000915b,

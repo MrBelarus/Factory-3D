@@ -22,6 +22,11 @@ public class Pipeline : FactoryObj
         this.type = FactoryObjTypes.Pipeline;
     }
 
+    protected new void Start()
+    {
+        base.Start();
+    }
+
     private void FixedUpdate()
     {
         if (isNextObjFree && itemToMove)
@@ -147,7 +152,7 @@ public class Pipeline : FactoryObj
         }
     }
 
-    private void OnDestroy()
+    protected new void OnDestroy()
     {
         //if (previousObjs[0])
         //{
@@ -164,6 +169,8 @@ public class Pipeline : FactoryObj
         //            break;
         //    }
         //}
+
+        base.OnDestroy();
 
         DetachNextWithThis();
 

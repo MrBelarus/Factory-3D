@@ -23,10 +23,20 @@ public class Seller : FactoryObj
     //    }
     //}
 
+    protected new void Start()
+    {
+        base.Start();
+    }
+
     public void SellObj(SellObject sellObj)
     {
         //send info to manager (cost, what and etc)
 
         Destroy(sellObj.gameObject);
+    }
+
+    private new void OnDestroy()
+    {
+        base.OnDestroy();
     }
 }

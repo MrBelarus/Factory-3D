@@ -24,6 +24,11 @@ public class Purchaser : FactoryObj
         purchaseQueue = new Queue<GameObject>();
     }
 
+    protected new void Start()
+    {
+        base.Start();
+    }
+
     //имитация покупки через UI
     private void Update()
     {
@@ -124,8 +129,10 @@ public class Purchaser : FactoryObj
         }
     }
 
-    private void OnDestroy()
+    private new void OnDestroy()
     {
+        base.OnDestroy();
+
         DetachNextWithThis();
 
         Collider[] overlaps = Physics.OverlapBox(transform.position + Vector3.up / 2, Vector3.one / 2.05f);

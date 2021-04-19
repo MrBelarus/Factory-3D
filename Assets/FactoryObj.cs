@@ -29,6 +29,19 @@ public class FactoryObj : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        if (directionArrows == null || directionArrows.Length == 0)
+        {
+            Debug.LogError("Arrows isn't setup on " + type + "!");
+        }
+    }
+
+    protected void Start()
+    {
+        ObjectsHolder.instance.AddObject(this);
+    }
+
     public void DetachNextWithThis()
     {
         if (nextObj)
@@ -51,6 +64,11 @@ public class FactoryObj : MonoBehaviour
                 }
             }
         }
+    }
+
+    protected void OnDestroy()
+    {
+        ObjectsHolder.instance.RemoveObject(this);
     }
 }
 
