@@ -10,23 +10,67 @@ public class FactoryMenuHandler : MonoBehaviour
     [SerializeField] private Text itemToProduceName;
     [SerializeField] private Image itemToProduceImage;
 
+    [SerializeField] private Sprite questionSprite;
+
+    [SerializeField] private MaterialsMenu materialsMenu;
+
     private Factory factory;
 
     public void SetUpMenu(Factory factory)
     {
         factoryName.text = factory.prefabName;
         materialsInQueueCount.text = factory.MaterialsAmountIn.ToString();
-        itemToProduceName.text = factory.whatNeedToProduce.name;
-        itemToProduceImage.sprite = Resources.Load<Sprite>("UISprites/" + factory.whatNeedToProduce.name);
+
+        itemToProduceName.text = factory.whatNeedToProduce == null ? "Nothing" : factory.whatNeedToProduce.name;
+        itemToProduceImage.sprite = factory.whatNeedToProduce == null ? questionSprite :
+            Resources.Load<Sprite>("UISprites/" + factory.whatNeedToProduce.name);
+
+        if (factory.whatNeedToProduce != null && itemToProduceImage.sprite == null)
+        {
+            Debug.LogError("Image was't found!");
+        }
 
         this.factory = factory;
     }
 
-    public void ChangeItemToProduce(SellObject sellObject)
+    public void OpenFactoryObjectsMenu() //вызов метода по клику на кнопку "Item To Produce"
     {
+        materialsMenu.UpdateButtons(factory.AvailableMaterialsToProduce);
+
+        List<Button> buttons = materialsMenu.buttons;
+
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            int copy = i;   //event arguments fix
+            buttons[i].onClick.AddListener(() => { ChangeItemToProduce(copy); });
+        }
+
+        materialsMenu.gameObject.SetActive(true);
+    }
+
+    public void ChangeItemToProduce(int materialIndex)
+    {
+        SellObject sellObject = Resources.Load<SellObject>(factory.AvailableMaterialsToProduce[materialIndex].ToString());
+
+        if (sellObject == null)
+        {
+            Debug.LogError("Object to produce wasn't found in the resource folder." +
+                " Maybe you should change prefab name or add it to enum names!");
+        }
+
+        factory.whatNeedToProduce = sellObject;
         itemToProduceImage.sprite = Resources.Load<Sprite>("UISprites/" + sellObject.name);
         itemToProduceName.text = sellObject.name;
-        factory.whatNeedToProduce = sellObject;
+
+
+        //fix when pipeline or smth waiting because next obj isn't free
+        //TODO: test it
+        foreach (FactoryObj factoryObj in factory.previousObjs)
+        {
+            factoryObj.isNextObjFree = true;
+        }
+
+        materialsMenu.gameObject.SetActive(false);
     }
 
     public void ClearFactoryQueue() //on Button event

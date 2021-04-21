@@ -58,16 +58,21 @@ public class Pipeline : FactoryObj
                 //    previousObjs[0].isNextObjFree = true;
                 //}
 
-                for (int i = 0; i < previousObjs.Count; i++)
-                {
-                    previousObjs[i].isNextObjFree = true;
-                }
+                TellPreviousObjsIAmFree();
 
                 timer = 0f;
             }
 
             timer += Time.deltaTime;
             Mathf.Clamp(timer, 0, moveDelay + 1f);
+        }
+    }
+
+    public void TellPreviousObjsIAmFree()
+    {
+        for (int i = 0; i < previousObjs.Count; i++)
+        {
+            previousObjs[i].isNextObjFree = true;
         }
     }
 

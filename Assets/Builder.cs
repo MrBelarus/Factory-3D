@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Builder : MonoBehaviour
 {
@@ -39,8 +40,10 @@ public class Builder : MonoBehaviour
 
 
     public GameObject objToReplacePrefab; //prefab
-    private GameObject objectToReplace; //instance of a prebab
+    private GameObject objectToReplace; //instance of a prefab
     private float lastRotation = 0f;
+
+    private ObjectsHolder gameObjectsHolder;
 
     // Start is called before the first frame update
     private void Awake()
@@ -58,6 +61,11 @@ public class Builder : MonoBehaviour
         cameraMain = Camera.main;
     }
 
+    private void Start()
+    {
+        gameObjectsHolder = ObjectsHolder.instance;
+    }
+
     //check the player's input
     private void Update()
     {
@@ -65,6 +73,11 @@ public class Builder : MonoBehaviour
 
         if (LMBPressed)
         {
+            if (EventSystem.current.IsPointerOverGameObject())  //clicked on UI element
+            {
+                return;
+            }
+
             switch (Mode)
             {
                 case Modes.Buy:
@@ -78,12 +91,12 @@ public class Builder : MonoBehaviour
                 case Modes.Delete:
                     RaycastHit hit;
                     Ray ray = cameraMain.ScreenPointToRay(Input.mousePosition);
-                    if (Physics.Raycast(ray, out hit, maxRayDistance, FactoryObjLayer))
+                    if (Physics.Raycast(ray, out hit, maxRayDistance, SelectiveLayer))
                     {
                         //TODO: UI? - do u realy want to remove it
                         //TODO: Game manager? - add sell cost to player pocket
 
-                        Destroy(hit.collider.transform.root.gameObject);
+                        Destroy(hit.transform.root.gameObject);
                     }
                     break;
 
@@ -91,6 +104,12 @@ public class Builder : MonoBehaviour
                     if (CanIReplaceIt())
                     {
                         ReplaceObj();
+
+                        if (gameObjectsHolder)
+                        {
+                            gameObjectsHolder.DirectionArrows = false;
+                        }
+
                         objectToReplace = null;
                         this.enabled = false;
                     }
@@ -125,6 +144,12 @@ public class Builder : MonoBehaviour
             }
 
             Mode = Modes.Undefined;
+
+            if (gameObjectsHolder && gameObjectsHolder.DirectionArrows)
+            {
+                gameObjectsHolder.DirectionArrows = false;
+            }
+
             objectToReplace = null;
             this.enabled = false;
         }

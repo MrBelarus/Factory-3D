@@ -40,13 +40,16 @@ public class CameraMovement : MonoBehaviour
     [SerializeField]
     private float edgeBorderScreenX = 10f, edgeBorderScreenY = 10f;
     [SerializeField]
-    private float borderCameraSpeed = 0.1f;
+    private float keyboardMoveSpeed = 0.1f;
+    [SerializeField]
+    private float shiftCoef = 2f;
+    private float moveCoef = 1f;
 
-    private float screenWidth, screenHeight;
     private bool lockBorderMovement = false;
 
-    private float mousePosMotionCoef = 1; //where to go camera (up/right = 1, down/left = -1)
-    private Vector3 mousePos;
+    //private float screenWidth, screenHeight;
+    //private float mousePosMotionCoef = 1; //where to go camera (up/right = 1, down/left = -1)
+    //private Vector3 mousePos;
 
     private void Awake()
     {
@@ -55,8 +58,8 @@ public class CameraMovement : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
 
-        screenWidth = Screen.width;
-        screenHeight = Screen.height;
+        //screenWidth = Screen.width;
+        //screenHeight = Screen.height;
 
         cameraFowardDirection = cameraTransform.forward;
         cameraFowardDirection = new Vector3(cameraFowardDirection.x, 0, cameraFowardDirection.z);
@@ -72,7 +75,7 @@ public class CameraMovement : MonoBehaviour
     {
         deltaX = Input.GetAxis("Mouse X");
         deltaY = Input.GetAxis("Mouse Y");
-        mousePos = Input.mousePosition;
+        //mousePos = Input.mousePosition;
 
         //rotate camera
         if (Input.GetKeyDown(KeyCode.E))
@@ -126,40 +129,75 @@ public class CameraMovement : MonoBehaviour
             return;
         }
 
-        if (mousePos.x < edgeBorderScreenX
-            || mousePos.x > screenWidth - edgeBorderScreenX)
-        {
-            if (mousePos.x > screenWidth / 2)
-            {
-                mousePosMotionCoef = mousePos.x > screenWidth ? 1 : 1 - (screenWidth - mousePos.x) / edgeBorderScreenX;
-            }
-            else
-            {
-                mousePosMotionCoef = mousePos.x < 0f ? -1 : -(1 - Mathf.Abs(mousePos.x) / edgeBorderScreenX);
-            }
 
-            rb.MovePosition(cameraTransform.position += Time.deltaTime * borderCameraSpeed 
-                * cameraRightDirection * mousePosMotionCoef);
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            moveCoef = shiftCoef;
+        }
+        else
+        {
+            moveCoef = 1f;
         }
 
-        if (mousePos.y < edgeBorderScreenY
-        || mousePos.y > screenHeight - edgeBorderScreenY)
-        {
-            if (mousePos.y > screenHeight / 2)
-            {
-                mousePosMotionCoef = mousePos.y > screenHeight ? 1 : 1 - (screenHeight - mousePos.y) / edgeBorderScreenY;
-            }
-            else
-            {
-                mousePosMotionCoef = mousePos.y < 0f ? -1 : -(1 - Mathf.Abs(mousePos.y) / edgeBorderScreenY);
-            }
 
-            rb.MovePosition(cameraTransform.position += Time.deltaTime * borderCameraSpeed 
-                * cameraFowardDirection * mousePosMotionCoef);
+        if (Input.GetKey(KeyCode.A))
+        {
+            rb.MovePosition(cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
+                * -cameraRightDirection * moveCoef);
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            rb.MovePosition(cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
+                * cameraRightDirection * moveCoef);
+        }
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            rb.MovePosition(cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
+                * cameraFowardDirection * moveCoef);
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            rb.MovePosition(cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
+                * -cameraFowardDirection * moveCoef);
         }
 
         CheckWorldBorders();
     }
+
+    //if (mousePos.x < edgeBorderScreenX
+    //    || mousePos.x > screenWidth - edgeBorderScreenX)
+    //{
+    //    if (mousePos.x > screenWidth / 2)
+    //    {
+    //        mousePosMotionCoef = mousePos.x > screenWidth ? 1 : 1 - (screenWidth - mousePos.x) / edgeBorderScreenX;
+    //    }
+    //    else
+    //    {
+    //        mousePosMotionCoef = mousePos.x < 0f ? -1 : -(1 - Mathf.Abs(mousePos.x) / edgeBorderScreenX);
+    //    }
+
+    //    rb.MovePosition(cameraTransform.position += Time.deltaTime * borderCameraSpeed 
+    //        * cameraRightDirection * mousePosMotionCoef);
+    //}
+
+    //if (mousePos.y < edgeBorderScreenY
+    //|| mousePos.y > screenHeight - edgeBorderScreenY)
+    //{
+    //    if (mousePos.y > screenHeight / 2)
+    //    {
+    //        mousePosMotionCoef = mousePos.y > screenHeight ? 1 : 1 - (screenHeight - mousePos.y) / edgeBorderScreenY;
+    //    }
+    //    else
+    //    {
+    //        mousePosMotionCoef = mousePos.y < 0f ? -1 : -(1 - Mathf.Abs(mousePos.y) / edgeBorderScreenY);
+    //    }
+
+    //    rb.MovePosition(cameraTransform.position += Time.deltaTime * borderCameraSpeed 
+    //        * cameraFowardDirection * mousePosMotionCoef);
+    //}
+
+    //CheckWorldBorders();
 
     private void CheckWorldBorders()
     {

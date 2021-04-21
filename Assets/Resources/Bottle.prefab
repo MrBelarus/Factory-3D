@@ -69,9 +69,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stage: 0
   material: 6
-  canBeCreatedWith: 
+  canBeCreatedWith: 0100000001000000
   transformComponent: {fileID: 0}
   cost: 5
+  afterCreatedCostCoef: 1
   timeToProduce: 0
   isMoving: 0
 --- !u!65 &6180396989586460301
@@ -85,8 +86,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5, z: 0.8}
-  m_Center: {x: 0, y: 0.25, z: 0}
+  m_Size: {x: 0.8, y: 0.5, z: 0.8}
+  m_Center: {x: 0, y: 0.3, z: 0}
 --- !u!1001 &2423073822296426219
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class GameUIManager : MonoBehaviour
@@ -24,15 +25,17 @@ public class GameUIManager : MonoBehaviour
 
     private FactoryMenuHandler factoryMenuHandler;
     private PurchaserMenuHandler purchaserMenuHandler;
+    private SellObjectMenuHandler sellObjectMenuHandler;
     //private PipelineMenuHandler pipelineMenuHandler;
 
     [Header("Detect layers:")]
-    [SerializeField] private LayerMask FactoryObjLayer;
-    [SerializeField] private LayerMask SellObjLayer;
-    [SerializeField] private LayerMask SelectiveLayer;
+    [SerializeField] private LayerMask FactoryObjLayer; //to identify what we have selected
+    [SerializeField] private LayerMask SellObjLayer;    //to identify what we have selected
+    [SerializeField] private LayerMask SelectiveLayer;  //what we can select [transfer&factoryObj]
 
     private GameObject selectedObj; //by LMB without builder enabled
     private Builder builder;
+    private ObjectsHolder gameObjectsHolder;
     
     [Header("Raycast settings")]
     public float rayDistance = 500f;
@@ -57,8 +60,10 @@ public class GameUIManager : MonoBehaviour
     {
         factoryMenuHandler = FactoryMenu.GetComponent<FactoryMenuHandler>();
         purchaserMenuHandler = PurchaserMenu.GetComponent<PurchaserMenuHandler>();
+        sellObjectMenuHandler = SellObjMenu.GetComponent<SellObjectMenuHandler>();
 
         builder = Builder.instance;
+        gameObjectsHolder = ObjectsHolder.instance;
         mainCamera = Camera.main;
     }
 
@@ -66,7 +71,8 @@ public class GameUIManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !builder.enabled)
         {
-            if (activeMenu && activeMenu.activeSelf)
+            if (activeMenu && activeMenu.activeSelf
+                || EventSystem.current.IsPointerOverGameObject()) //clicked on UI element
                 return;
 
             RaycastHit hit;
@@ -131,13 +137,17 @@ public class GameUIManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    private void SetUpAndOpenObjMenu(GameObject obj, SellObject script)
+    private void SetUpAndOpenObjMenu(GameObject obj, SellObject sellObj)
     {
         activeMenu = SellObjMenu;
-
+        print("Material");
         //TODO: sellObj menu setup
+        sellObjectMenuHandler.SetUpMenu(sellObj);
 
         activeMenu.SetActive(true);
+
+        //freeze time to prevent any issues
+        Time.timeScale = 0f;
     }
 
     public void CloseObjMenu()  //Button event
@@ -148,6 +158,7 @@ public class GameUIManager : MonoBehaviour
 
     #region Events
 
+    //Game UI Button that is not in Obj Menu
     public void OnDeleteModeClick()
     {
         if (builder.enabled)
@@ -175,6 +186,11 @@ public class GameUIManager : MonoBehaviour
         builder.Mode = Builder.Modes.Transform;
         //TODO: icon change
         builder.enabled = true;
+
+        if (gameObjectsHolder)
+        {
+            gameObjectsHolder.DirectionArrows = true;
+        }
 
         selectedObj = null;
         CloseObjMenu();
@@ -206,6 +222,7 @@ public class GameUIManager : MonoBehaviour
         FactoryMenu.transform.Find("Delete").GetComponent<Button>().onClick.AddListener(OnDeleteClick);
         PurchaserMenu.transform.Find("Delete").GetComponent<Button>().onClick.AddListener(OnDeleteClick);
         SellerMenu.transform.Find("Delete").GetComponent<Button>().onClick.AddListener(OnDeleteClick);
+        SellObjMenu.transform.Find("Delete").GetComponent<Button>().onClick.AddListener(OnDeleteClick);
     }
 
     #endregion

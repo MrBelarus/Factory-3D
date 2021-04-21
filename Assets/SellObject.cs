@@ -10,6 +10,7 @@ public enum Stages
     ready,
     readyWithImprovements
 };
+
 public enum Materials   //fromPurchaser stage 
 {
     Undefined,
@@ -22,41 +23,64 @@ public enum Materials   //fromPurchaser stage
     GlassBottle,	//model ..
     Glass,			//model ..
     Metal,			//model ..
-    Gear,			//model 
+    Gear,           //model ..
+    Car,			//model ..
+    Soda_Glass,		//model ..
+    Soda_Plastic,   //model ..
+    Clock,			//model ..
+    Toy,			//model ..
 };
-public enum FinalItems   //finish processed stage 
-{
-    Undefined,		
-    Car,			//model
-    Soda,			//model ++ / ++
-    Clock,			//model
-    Toy,			//model
-}
 
 [RequireComponent(typeof(Rigidbody))]
 public class SellObject : MonoBehaviour
 {
     public Stages stage;
     public Materials material;
-    public FinalItems? finalItem;
+    //public FinalItems? finalItem;
 
     public List<Materials> canBeCreatedWith;
 
     [HideInInspector] public Transform transformComponent;
     public float cost;
+    [Range(0f, 1f)]
+    public float afterCreatedCostCoef = 1f;
+
     public float timeToProduce;
     private Rigidbody rb;
 
     public bool isMoving = false;
 
+    private FactoryObj deliver;
+
     private void Awake()
     {
         transformComponent = gameObject.transform;
         rb = GetComponent<Rigidbody>();
+
+        if (afterCreatedCostCoef != 1f)
+        {
+            cost = (float)Math.Floor(cost * afterCreatedCostCoef);
+            print("произошел перерасчет стоимости");
+        }
+    }
+
+    private void Start()
+    {
+        ObjectsHolder.instance.AddObject(this);
     }
 
     private void OnDestroy()
     {
+        ObjectsHolder.instance.RemoveObject(this);
+
+        //fix if we have deleted item before it was delivered
+        if (deliver && deliver.type == FactoryObjTypes.Pipeline)
+        {
+            Pipeline pipeline = (Pipeline)deliver;
+            pipeline.isRecievingItem = false;
+            pipeline.TellPreviousObjsIAmFree();
+        }
+
         StopAllCoroutines();
     }
 
@@ -76,7 +100,7 @@ public class SellObject : MonoBehaviour
                 Factory factory = (Factory)deliver;
                 //можем ли мы двигать если там норм шаблон 
                 //и мы под него попадаем либо уже есть объект такой
-                if(!factory.CanFactoryGetObj(this))
+                if (!factory.CanFactoryGetObj(this))
                 {
                     return false;
                 }
@@ -99,6 +123,8 @@ public class SellObject : MonoBehaviour
     IEnumerator MoveObj(Vector3 direction, FactoryObj deliver, float time)
     {
         isMoving = true;
+
+        this.deliver = deliver;
 
         if (time <= 0)
         {

@@ -68,6 +68,7 @@ MonoBehaviour:
   canBeCreatedWith: 
   transformComponent: {fileID: 0}
   cost: 5
+  afterCreatedCostCoef: 0.5
   timeToProduce: 0
   isMoving: 0
 --- !u!65 &6180396989586460301
@@ -81,8 +82,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5, z: 0.8}
-  m_Center: {x: 0, y: 0.25, z: 0}
+  m_Size: {x: 0.8, y: 0.5, z: 0.8}
+  m_Center: {x: 0, y: 0.3, z: 0}
 --- !u!1001 &2601919935923068031
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -145,6 +146,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 2c8bc6c8e1b9a594e8f374b7416a2554,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: f8d509a097af84b429ac4686f5f194c7, type: 2}
     - target: {fileID: 919132149155446097, guid: 2c8bc6c8e1b9a594e8f374b7416a2554,
         type: 3}
       propertyPath: m_Name

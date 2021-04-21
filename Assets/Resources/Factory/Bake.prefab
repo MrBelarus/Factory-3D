@@ -119,6 +119,7 @@ MonoBehaviour:
   ObjectMoveTime: 1.8
   directionArrows:
   - {fileID: 5420449208238613154}
+  AvailableMaterialsToProduce: 060000000f0000000900000008000000
   whatNeedToProduce: {fileID: 1622317414031837238, guid: b642245d99aeccc4b9b26fb75df958ac,
     type: 3}
   processedObjSpawnPoint: {fileID: 4829086410908640914}

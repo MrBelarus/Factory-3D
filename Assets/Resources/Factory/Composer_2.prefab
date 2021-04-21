@@ -136,6 +136,7 @@ MonoBehaviour:
   - {fileID: 8223305978916878843}
   - {fileID: 1940998817632885724}
   - {fileID: 4662346665069211582}
+  AvailableMaterialsToProduce: 0a0000000400000009000000080000000f000000
   whatNeedToProduce: {fileID: 1622317414031837238, guid: b642245d99aeccc4b9b26fb75df958ac,
     type: 3}
   processedObjSpawnPoint: {fileID: 4829086410908640914}

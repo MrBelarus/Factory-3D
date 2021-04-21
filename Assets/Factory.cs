@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Factory : FactoryObj
 {
+    public List<Materials> AvailableMaterialsToProduce;
     public SellObject whatNeedToProduce;//what we should get after process iterations
 
     private GameObject processResult;
@@ -23,6 +24,11 @@ public class Factory : FactoryObj
     protected new void Start()
     {
         base.Start();
+
+        if (AvailableMaterialsToProduce == null || AvailableMaterialsToProduce.Count == 0)
+        {
+            Debug.LogError("Need to setup materials to produce in " + this.name);
+        }
     }
 
     private void FixedUpdate()

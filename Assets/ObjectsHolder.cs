@@ -7,6 +7,7 @@ public class ObjectsHolder : MonoBehaviour //will keep factory game objs data
     public static ObjectsHolder instance;
 
     public List<FactoryObj> factoryObjs = new List<FactoryObj>();
+    public List<SellObject> sellObjs = new List<SellObject>();
 
     private void Awake()
     {
@@ -35,6 +36,12 @@ public class ObjectsHolder : MonoBehaviour //will keep factory game objs data
 
             arrowsOn = value;
         }
+        get { return arrowsOn; }
+    }
+
+    private void Start()
+    {
+        DirectionArrows = false;
     }
 
     //private void Update()
@@ -50,8 +57,18 @@ public class ObjectsHolder : MonoBehaviour //will keep factory game objs data
         factoryObjs.Add(obj);
     }
 
+    public void AddObject(SellObject obj)
+    {
+        sellObjs.Add(obj);
+    }
+
     public void RemoveObject(FactoryObj obj)
     {
         factoryObjs.Remove(obj);
+    }
+
+    public void RemoveObject(SellObject obj)
+    {
+        sellObjs.Remove(obj);
     }
 }
