@@ -126,8 +126,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  prefabName: Factory 2x2
-  cost: 0
+  prefabName: Filler
+  cost: 350
   nextObj: {fileID: 0}
   previousObjs: []
   isNextObjFree: 1
@@ -136,6 +136,7 @@ MonoBehaviour:
   - {fileID: 5885366290142342265}
   - {fileID: 8828649869724301700}
   - {fileID: 947338050382906132}
+  AvailableMaterialsToProduce: 
   whatNeedToProduce: {fileID: 1622317414031837238, guid: b642245d99aeccc4b9b26fb75df958ac,
     type: 3}
   processedObjSpawnPoint: {fileID: 4829086410908640914}

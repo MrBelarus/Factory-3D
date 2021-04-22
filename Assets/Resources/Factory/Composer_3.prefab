@@ -128,7 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   prefabName: Composer_3
-  cost: 0
+  cost: 500
   nextObj: {fileID: 0}
   previousObjs: []
   isNextObjFree: 1
@@ -138,6 +138,7 @@ MonoBehaviour:
   - {fileID: 1940998817632885724}
   - {fileID: 4662346665069211582}
   - {fileID: 454375275651438621}
+  AvailableMaterialsToProduce: 
   whatNeedToProduce: {fileID: 1622317414031837238, guid: b642245d99aeccc4b9b26fb75df958ac,
     type: 3}
   processedObjSpawnPoint: {fileID: 4829086410908640914}

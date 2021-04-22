@@ -42,6 +42,15 @@ public class Purchaser : FactoryObj
 
     private void FixedUpdate()
     {
+        //autobuy implementation
+        if (isNextObjFree)
+        {
+            if (AutoBuy && purchaseQueue.Count == 0 && itemToPurchase)
+            {
+                purchaseQueue.Enqueue(itemToPurchase);
+            }
+        }
+
         if (isNextObjFree && purchaseQueue.Count > 0)
         {
             if (timer >= timeToPurchaseItem && nextObj)
@@ -59,10 +68,10 @@ public class Purchaser : FactoryObj
                 GameObject purchasedItem = Instantiate(itemToPurchase, objSpawnPoint.position, objSpawnPoint.rotation);
                 purchasedItem.GetComponent<SellObject>().MoveTo(transform.forward, nextObj, ObjectMoveTime);
 
-                if (purchaseQueue.Count == 0)
-                {
-                    itemToPurchase = null;
-                }
+                //if (purchaseQueue.Count == 0)
+                //{
+                //    itemToPurchase = null;
+                //}
 
                 timer = 0f;
             }

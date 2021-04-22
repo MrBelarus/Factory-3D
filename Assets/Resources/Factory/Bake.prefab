@@ -112,7 +112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   prefabName: Bake
-  cost: 0
+  cost: 150
   nextObj: {fileID: 0}
   previousObjs: []
   isNextObjFree: 1

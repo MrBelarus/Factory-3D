@@ -46,6 +46,7 @@ public class FactoryMenuHandler : MonoBehaviour
         }
 
         materialsMenu.gameObject.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     public void ChangeItemToProduce(int materialIndex)
@@ -71,6 +72,7 @@ public class FactoryMenuHandler : MonoBehaviour
         }
 
         materialsMenu.gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 
     public void ClearFactoryQueue() //on Button event

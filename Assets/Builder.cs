@@ -41,6 +41,7 @@ public class Builder : MonoBehaviour
 
     public GameObject objToReplacePrefab; //prefab
     private GameObject objectToReplace; //instance of a prefab
+    private float objCost;
     private float lastRotation = 0f;
 
     private ObjectsHolder gameObjectsHolder;
@@ -83,6 +84,12 @@ public class Builder : MonoBehaviour
                 case Modes.Buy:
                     if (CanIReplaceIt())
                     {
+                        //TODO: Link with cashManager
+                        //if (objCost > CashManager.instance.money)
+                        //{
+                        //    return;
+                        //}
+
                         ReplaceObj();
                         CreateObjToReplace();
                     }
@@ -123,35 +130,7 @@ public class Builder : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (objectToReplace)
-            {
-                switch (Mode)
-                {
-                    case Modes.Buy:
-                        Destroy(objectToReplace);
-                        break;
-
-                    case Modes.Transform:
-                        objectToReplace.transform.position = objectToTransformDefaultPos;
-                        objectToReplace.transform.rotation = Quaternion.Euler(objectToTransformDefaultRotation);
-                        ReplaceObj();
-                        break;
-
-                    default:
-                        Debug.LogError("Incorrect mode in builder!");
-                        break;
-                }
-            }
-
-            Mode = Modes.Undefined;
-
-            if (gameObjectsHolder && gameObjectsHolder.DirectionArrows)
-            {
-                gameObjectsHolder.DirectionArrows = false;
-            }
-
-            objectToReplace = null;
-            this.enabled = false;
+            TurnOffBuilder();
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -179,6 +158,43 @@ public class Builder : MonoBehaviour
                 objectToReplace.transform.position = new Vector3(x, 1, z);
             }
         }
+    }
+
+    /// <summary>
+    /// Disables work of builder. In addition you can leave arrows on
+    /// </summary>
+    /// <param name="turnOffArrows"></param>
+    public void TurnOffBuilder(bool turnOffArrows = true)
+    {
+        if (objectToReplace)
+        {
+            switch (Mode)
+            {
+                case Modes.Buy:
+                    Destroy(objectToReplace);
+                    break;
+
+                case Modes.Transform:
+                    objectToReplace.transform.position = objectToTransformDefaultPos;
+                    objectToReplace.transform.rotation = Quaternion.Euler(objectToTransformDefaultRotation);
+                    ReplaceObj();
+                    break;
+
+                default:
+                    Debug.LogError("Incorrect mode in builder!");
+                    break;
+            }
+        }
+
+        Mode = Modes.Undefined;
+
+        if (turnOffArrows && gameObjectsHolder && gameObjectsHolder.DirectionArrows)
+        {
+            gameObjectsHolder.DirectionArrows = false;
+        }
+
+        objectToReplace = null;
+        this.enabled = false;
     }
 
     private void SnapPoint(ref float x)
@@ -282,9 +298,10 @@ public class Builder : MonoBehaviour
         return true;
     }
 
-    public void BuyFactoryObj(GameObject prefab)
+    public void BuyFactoryObj(FactoryObj factoryObj)
     {
-        objToReplacePrefab = prefab;
+        objToReplacePrefab = factoryObj.gameObject;
+        objCost = factoryObj.cost;
         CreateObjToReplace();
     }
 

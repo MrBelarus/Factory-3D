@@ -127,7 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   prefabName: Composer_2
-  cost: 0
+  cost: 250
   nextObj: {fileID: 0}
   previousObjs: []
   isNextObjFree: 1

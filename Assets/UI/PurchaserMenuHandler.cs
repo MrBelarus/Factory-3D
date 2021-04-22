@@ -40,6 +40,20 @@ public class PurchaserMenuHandler : MonoBehaviour
         BoughtObjsQueue.text = purchaser.PurchaseQueueCount.ToString();
     }
 
+    public void TurnOnAutoBuy()
+    {
+        purchaser.AutoBuy = !purchaser.AutoBuy;
+
+        if (purchaser.AutoBuy)
+        {
+            AutoBuyCheckMark.gameObject.SetActive(true);
+        }
+        else
+        {
+            AutoBuyCheckMark.gameObject.SetActive(false);
+        }
+    }
+
     public void OpenPurchaserItemsMenu()    //вызов метода по клику на кнопку "Item To Buy"
     {
         materialsMenu.UpdateButtons(purchaser.AvailableMaterials);
@@ -53,6 +67,9 @@ public class PurchaserMenuHandler : MonoBehaviour
         }
 
         materialsMenu.gameObject.SetActive(true);
+
+        //hide purchaser menu
+        gameObject.SetActive(false);
     }
 
     public void ChangeItemToPurchase(int materialIndex)
@@ -67,6 +84,9 @@ public class PurchaserMenuHandler : MonoBehaviour
         itemToBuyImage.sprite = Resources.Load<Sprite>("UISprites/" + purchaser.itemToPurchase.name);
 
         materialsMenu.gameObject.SetActive(false);
+        
+        //show purchaser menu
+        gameObject.SetActive(true);
     }
 
     public void ClearPurchaseQueue() //on Button event

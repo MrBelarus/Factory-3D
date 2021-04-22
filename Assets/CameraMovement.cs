@@ -28,6 +28,8 @@ public class CameraMovement : MonoBehaviour
 
     [SerializeField]
     private float zoomSpeed = 10f;
+    [SerializeField]
+    private float middleMouseMoveSpeed = 50f;
 
     private Vector3 cameraFowardDirection;
     private Vector3 cameraRightDirection;
@@ -78,11 +80,11 @@ public class CameraMovement : MonoBehaviour
         //mousePos = Input.mousePosition;
 
         //rotate camera
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && Time.deltaTime > 0)
         {
             RotateCamera(Rotates.Right);
         }
-        else if (Input.GetKeyDown(KeyCode.Q))
+        else if (Input.GetKeyDown(KeyCode.Q) && Time.deltaTime > 0)
         {
             RotateCamera(Rotates.Left);
         }
@@ -96,7 +98,7 @@ public class CameraMovement : MonoBehaviour
                 Cursor.visible = false;
             }
 
-            cameraScript.fieldOfView += deltaY * Time.deltaTime * zoomSpeed;
+            cameraScript.fieldOfView += deltaY * Time.fixedDeltaTime * zoomSpeed;
             cameraScript.fieldOfView = Mathf.Clamp(cameraScript.fieldOfView, MIN_FOV, MAX_FOV);
 
             CheckWorldBorders();
@@ -105,7 +107,8 @@ public class CameraMovement : MonoBehaviour
         //Change position by middle mouse
         else if (Input.GetMouseButton(MIDDLE_MOUSE_ID))
         {
-            cameraTransform.position -= deltaY * cameraFowardDirection + deltaX * cameraRightDirection;
+            cameraTransform.position -= Time.fixedDeltaTime * middleMouseMoveSpeed *
+                (deltaY * cameraFowardDirection + deltaX * cameraRightDirection);
             lockBorderMovement = true;
 
             CheckWorldBorders();

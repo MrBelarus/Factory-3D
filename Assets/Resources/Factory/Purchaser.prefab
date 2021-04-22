@@ -326,7 +326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   prefabName: Purchaser
-  cost: 2000
+  cost: 50
   nextObj: {fileID: 0}
   previousObjs: []
   isNextObjFree: 1

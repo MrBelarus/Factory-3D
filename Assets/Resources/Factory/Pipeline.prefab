@@ -214,7 +214,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   prefabName: Pipeline
-  cost: 0
+  cost: 25
   nextObj: {fileID: 0}
   previousObjs: []
   isNextObjFree: 1

@@ -22,6 +22,7 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private GameObject FactoryMenu;
     [SerializeField] private GameObject PipelineMenu;
     [SerializeField] private GameObject PurchaserMenu;
+    [SerializeField] private GameObject FactoryObjsShopMenu;
 
     private FactoryMenuHandler factoryMenuHandler;
     private PurchaserMenuHandler purchaserMenuHandler;
@@ -36,7 +37,7 @@ public class GameUIManager : MonoBehaviour
     private GameObject selectedObj; //by LMB without builder enabled
     private Builder builder;
     private ObjectsHolder gameObjectsHolder;
-    
+
     [Header("Raycast settings")]
     public float rayDistance = 500f;
     private Camera mainCamera;
@@ -140,8 +141,6 @@ public class GameUIManager : MonoBehaviour
     private void SetUpAndOpenObjMenu(GameObject obj, SellObject sellObj)
     {
         activeMenu = SellObjMenu;
-        print("Material");
-        //TODO: sellObj menu setup
         sellObjectMenuHandler.SetUpMenu(sellObj);
 
         activeMenu.SetActive(true);
@@ -150,9 +149,15 @@ public class GameUIManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    public void CloseObjMenu()  //Button event
+    public void CloseObjMenu(GameObject menu)  //Button event
     {
-        activeMenu.SetActive(false);
+        menu.SetActive(false);
+
+        if (menu == activeMenu)
+        {
+            activeMenu = null;
+        }
+
         Time.timeScale = 1f;
     }
 
@@ -161,25 +166,42 @@ public class GameUIManager : MonoBehaviour
     //Game UI Button that is not in Obj Menu
     public void OnDeleteModeClick()
     {
+        //if builder was active -> we disable this mode
         if (builder.enabled)
         {
-            builder.enabled = false;
-            //TODO: icon change
-            return;
+            if (builder.Mode == Builder.Modes.Delete)       //second click on the same obj
+            {
+                builder.TurnOffBuilder();
+                //TODO: Icon change
+                return;
+            }
+            builder.TurnOffBuilder();                       //for example if we was in delete mode 
+                                                            //and switched to transform
         }
 
         builder.Mode = Builder.Modes.Delete;
         //TODO: icon change
         builder.enabled = true;
+
+        if (gameObjectsHolder && !gameObjectsHolder.DirectionArrows)
+        {
+            gameObjectsHolder.DirectionArrows = true;
+        }
     }
 
     public void OnTransformClick()
     {
+        //if builder was active -> we disable this mode
         if (builder.enabled)
         {
-            builder.enabled = false;
-            //TODO: icon change
-            return;
+            if (builder.Mode == Builder.Modes.Transform)    //second click on the same obj
+            {
+                builder.TurnOffBuilder();
+                //TODO: Icon change
+                return;
+            }
+            builder.TurnOffBuilder();                       //for example if we was in delete mode 
+                                                            //and switched to transform
         }
 
         builder.TransformObj(selectedObj);
@@ -187,13 +209,13 @@ public class GameUIManager : MonoBehaviour
         //TODO: icon change
         builder.enabled = true;
 
-        if (gameObjectsHolder)
+        if (gameObjectsHolder && !gameObjectsHolder.DirectionArrows)
         {
             gameObjectsHolder.DirectionArrows = true;
         }
 
         selectedObj = null;
-        CloseObjMenu();
+        CloseObjMenu(activeMenu);
     }
 
     public void OnDeleteClick()
@@ -208,7 +230,46 @@ public class GameUIManager : MonoBehaviour
         }
 
         selectedObj = null;
-        CloseObjMenu();
+        CloseObjMenu(activeMenu);
+    }
+
+    public void OnFactoryShopClick()
+    {
+        if (activeMenu == FactoryObjsShopMenu)
+        {
+            CloseObjMenu(activeMenu);
+            return;
+        }
+
+        //-> open factory Obj menu
+        FactoryObjsShopMenu.SetActive(true);
+        activeMenu = FactoryObjsShopMenu;
+
+        //freeze time to prevent any issues
+        Time.timeScale = 0f;
+    }
+
+    public void OnFactoryObjBuyClick(FactoryObj factoryObj)
+    {
+        //if builder was active -> we disable this mode
+        if (builder.enabled)
+        {
+            builder.TurnOffBuilder(false);                  //for example if we was in delete mode 
+                                                            //and switched to transform
+        }
+
+        builder.BuyFactoryObj(factoryObj);
+        builder.Mode = Builder.Modes.Buy;
+        //TODO: icon change
+        builder.enabled = true;
+
+        if (gameObjectsHolder && !gameObjectsHolder.DirectionArrows)
+        {
+            print("+");
+            gameObjectsHolder.DirectionArrows = true;
+        }
+
+        CloseObjMenu(activeMenu);
     }
 
     private void AddListenersButton()
