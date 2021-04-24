@@ -67,6 +67,7 @@ public class SaveSystem : MonoBehaviour
 
             currentSavePath = filePath;
 
+            data = new SaveData();
             BinaryFormatter bf = new BinaryFormatter();
             bf.Serialize(file, data);
 

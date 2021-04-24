@@ -103,6 +103,10 @@ public class GameUIManager : MonoBehaviour
                 }
             }
         }
+        else if (Input.GetKeyDown(KeyCode.Escape) && !builder.enabled)
+        {
+            OnMainMenuButtonClick();
+        }
     }
 
     private void SetUpAndOpenObjMenu(GameObject obj, FactoryObj factoryObj)
