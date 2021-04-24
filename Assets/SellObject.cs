@@ -41,7 +41,7 @@ public class SellObject : MonoBehaviour
     public List<Materials> canBeCreatedWith;
 
     [HideInInspector] public Transform transformComponent;
-    public float cost;
+    public int cost;
     [Range(0f, 1f)]
     public float afterCreatedCostCoef = 1f;
 
@@ -59,7 +59,7 @@ public class SellObject : MonoBehaviour
 
         if (afterCreatedCostCoef != 1f)
         {
-            cost = (float)Math.Floor(cost * afterCreatedCostCoef);
+            cost = (int)Math.Floor(cost * afterCreatedCostCoef);
             print("произошел перерасчет стоимости");
         }
     }

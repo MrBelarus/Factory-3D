@@ -31,6 +31,7 @@ public class Seller : FactoryObj
     public void SellObj(SellObject sellObj)
     {
         //send info to manager (cost, what and etc)
+        CashManager.instance.Earn(sellObj.cost);
 
         Destroy(sellObj.gameObject);
     }

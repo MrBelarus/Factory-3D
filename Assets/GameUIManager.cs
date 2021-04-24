@@ -9,10 +9,9 @@ public class GameUIManager : MonoBehaviour
 {
     public static GameUIManager instance;
 
-    [Header("Buttons:")]
-    [SerializeField] private Button DestroyButton;
-    //[SerializeField] private Button BuildMode;
-    [SerializeField] private Button MenuButton;
+    //[Header("Buttons:")]
+    //[SerializeField] private Button DestroyButton;
+    //[SerializeField] private Button MenuButton;
 
 
     private GameObject activeMenu;
@@ -23,6 +22,10 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private GameObject PipelineMenu;
     [SerializeField] private GameObject PurchaserMenu;
     [SerializeField] private GameObject FactoryObjsShopMenu;
+    [SerializeField] private GameObject MainMenu;
+
+    [Header("Vars")]
+    [SerializeField] private Text money;
 
     private FactoryMenuHandler factoryMenuHandler;
     private PurchaserMenuHandler purchaserMenuHandler;
@@ -161,6 +164,11 @@ public class GameUIManager : MonoBehaviour
         Time.timeScale = 1f;
     }
 
+    public void UpdateMoneyText(int amount)
+    {
+        money.text = amount + "$";
+    }
+
     #region Events
 
     //Game UI Button that is not in Obj Menu
@@ -270,6 +278,27 @@ public class GameUIManager : MonoBehaviour
         }
 
         CloseObjMenu(activeMenu);
+    }
+
+    public void OnMainMenuButtonClick()
+    {
+        if (activeMenu == MainMenu)
+        {
+            CloseObjMenu(activeMenu);
+            return;
+        }
+
+        //-> open main menu
+        MainMenu.SetActive(true);
+        activeMenu = MainMenu;
+
+        //freeze time to prevent any issues
+        Time.timeScale = 0f;
+    }
+
+    public void OnExitWithSaveButtonClick()
+    {
+
     }
 
     private void AddListenersButton()

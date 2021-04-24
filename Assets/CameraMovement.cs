@@ -75,6 +75,12 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
+        //to prevent any movement when timeScale is 0
+        if (Time.deltaTime == 0)
+        {
+            return;
+        }
+
         deltaX = Input.GetAxis("Mouse X");
         deltaY = Input.GetAxis("Mouse Y");
         //mousePos = Input.mousePosition;

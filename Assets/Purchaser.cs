@@ -29,16 +29,16 @@ public class Purchaser : FactoryObj
         base.Start();
     }
 
-    //имитация покупки через UI
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            itemToPurchase = Resources.Load("IronOre") as GameObject;
+    ////имитация покупки через UI
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        itemToPurchase = Resources.Load("IronOre") as GameObject;
 
-            BuyMaterial(itemToPurchase);
-        }
-    }
+    //        BuyMaterial(itemToPurchase);
+    //    }
+    //}
 
     private void FixedUpdate()
     {
