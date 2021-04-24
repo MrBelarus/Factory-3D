@@ -21,9 +21,9 @@ public class Factory : FactoryObj
     private bool readyToProcess = false;
     public override bool IsFree { get { return !isBusy; } }
 
-    protected new void Start()
+    protected new void Awake()
     {
-        base.Start();
+        base.Awake();
 
         if (AvailableMaterialsToProduce == null || AvailableMaterialsToProduce.Count == 0)
         {
@@ -103,7 +103,12 @@ public class Factory : FactoryObj
     {
         bool isItNeeded = false;
 
-        List<Materials> neededMaterials = whatNeedToProduce.canBeCreatedWith;
+        List<Materials> neededMaterials = new List<Materials>();
+
+        if (whatNeedToProduce)
+        {
+            neededMaterials = whatNeedToProduce.canBeCreatedWith;
+        }
 
         foreach (Materials neededMaterial in neededMaterials)
         {
@@ -133,6 +138,12 @@ public class Factory : FactoryObj
 
     public void ClearFactoryQueue()
     {
+        CashManager cashManager = CashManager.instance;
+        foreach (SellObject obj in factoryContainer)
+        {
+            cashManager.Earn(obj.cost / 2);
+        }
+
         factoryContainer.Clear();
     }
 

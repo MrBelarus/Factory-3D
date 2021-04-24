@@ -17,11 +17,4 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    // Start is called before the first frame update
-    private void Start()
-    {
-        Application.targetFrameRate = 60;
-        QualitySettings.vSyncCount = 1;
-    }
 }

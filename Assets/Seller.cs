@@ -5,6 +5,7 @@ using UnityEngine;
 public class Seller : FactoryObj
 {
     //connect with UI manager, it will calculate cost and destroy objs
+    private CashManager cashManager;
 
     public override bool IsFree 
     {
@@ -23,15 +24,16 @@ public class Seller : FactoryObj
     //    }
     //}
 
-    protected new void Start()
+    protected new void Awake()
     {
-        base.Start();
+        base.Awake();
+        cashManager = CashManager.instance;
     }
 
     public void SellObj(SellObject sellObj)
     {
         //send info to manager (cost, what and etc)
-        CashManager.instance.Earn(sellObj.cost);
+        cashManager.Earn(sellObj.cost);
 
         Destroy(sellObj.gameObject);
     }

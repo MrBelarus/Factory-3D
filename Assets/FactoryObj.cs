@@ -7,7 +7,7 @@ public class FactoryObj : MonoBehaviour
     public FactoryObjTypes type;
 
     public string prefabName;   //setups in editor for each obj
-    public float cost;
+    public int cost;
 
     public FactoryObj nextObj;
     public List<FactoryObj> previousObjs = new List<FactoryObj>();
@@ -29,16 +29,13 @@ public class FactoryObj : MonoBehaviour
         }
     }
 
-    private void Awake()
+    protected void Awake()
     {
         if (directionArrows == null || directionArrows.Length == 0)
         {
             Debug.LogError("Arrows isn't setup on " + type + "!");
         }
-    }
 
-    protected void Start()
-    {
         ObjectsHolder.instance.AddObject(this);
     }
 

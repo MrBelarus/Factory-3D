@@ -41,10 +41,11 @@ public class Builder : MonoBehaviour
 
     public GameObject objToReplacePrefab; //prefab
     private GameObject objectToReplace; //instance of a prefab
-    private float objCost;
+    private int objCost;
     private float lastRotation = 0f;
 
     private ObjectsHolder gameObjectsHolder;
+    private CashManager cashManager;
 
     // Start is called before the first frame update
     private void Awake()
@@ -65,6 +66,7 @@ public class Builder : MonoBehaviour
     private void Start()
     {
         gameObjectsHolder = ObjectsHolder.instance;
+        cashManager = CashManager.instance;
     }
 
     //check the player's input
@@ -82,7 +84,7 @@ public class Builder : MonoBehaviour
             switch (Mode)
             {
                 case Modes.Buy:
-                    if (CanIReplaceIt())
+                    if (CanIReplaceIt() && cashManager.IsEnoughToSpend(objCost))
                     {
                         //TODO: Link with cashManager
                         //if (objCost > CashManager.instance.money)
@@ -90,6 +92,7 @@ public class Builder : MonoBehaviour
                         //    return;
                         //}
 
+                        cashManager.Spend(objCost);
                         ReplaceObj();
                         CreateObjToReplace();
                     }

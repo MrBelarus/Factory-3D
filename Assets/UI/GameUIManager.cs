@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameUIManager : MonoBehaviour
@@ -58,6 +59,8 @@ public class GameUIManager : MonoBehaviour
         }
 
         AddListenersButton();
+
+        SaveSystem.instance.SetupGame();
     }
 
     private void Start()
@@ -152,21 +155,9 @@ public class GameUIManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    public void CloseObjMenu(GameObject menu)  //Button event
-    {
-        menu.SetActive(false);
-
-        if (menu == activeMenu)
-        {
-            activeMenu = null;
-        }
-
-        Time.timeScale = 1f;
-    }
-
     public void UpdateMoneyText(int amount)
     {
-        money.text = amount + "$";
+        money.text = amount.ToString();
     }
 
     #region Events
@@ -197,6 +188,18 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
+    public void OnCloseObjMenuButtonClick(GameObject menu)
+    {
+        menu.SetActive(false);
+
+        if (menu == activeMenu)
+        {
+            activeMenu = null;
+        }
+
+        Time.timeScale = 1f;
+    }
+
     public void OnTransformClick()
     {
         //if builder was active -> we disable this mode
@@ -223,7 +226,7 @@ public class GameUIManager : MonoBehaviour
         }
 
         selectedObj = null;
-        CloseObjMenu(activeMenu);
+        OnCloseObjMenuButtonClick(activeMenu);
     }
 
     public void OnDeleteClick()
@@ -238,14 +241,14 @@ public class GameUIManager : MonoBehaviour
         }
 
         selectedObj = null;
-        CloseObjMenu(activeMenu);
+        OnCloseObjMenuButtonClick(activeMenu);
     }
 
     public void OnFactoryShopClick()
     {
         if (activeMenu == FactoryObjsShopMenu)
         {
-            CloseObjMenu(activeMenu);
+            OnCloseObjMenuButtonClick(activeMenu);
             return;
         }
 
@@ -277,15 +280,21 @@ public class GameUIManager : MonoBehaviour
             gameObjectsHolder.DirectionArrows = true;
         }
 
-        CloseObjMenu(activeMenu);
+        OnCloseObjMenuButtonClick(activeMenu);
     }
 
     public void OnMainMenuButtonClick()
     {
         if (activeMenu == MainMenu)
         {
-            CloseObjMenu(activeMenu);
+            OnCloseObjMenuButtonClick(activeMenu);
             return;
+        }
+
+        //to prevent save issue when builder mode is on and temp obj saves too
+        if (builder.enabled)
+        {
+            builder.TurnOffBuilder();
         }
 
         //-> open main menu
@@ -298,7 +307,20 @@ public class GameUIManager : MonoBehaviour
 
     public void OnExitWithSaveButtonClick()
     {
+        SaveSystem.instance.SaveGame();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Game_Start_Menu");
+    }
 
+    public void OnExitWithoutSaveButtonClick()
+    {
+        if (SaveSystem.instance.IsNewGame)
+        {
+            SaveSystem.instance.DeleteSaveFile();
+        }
+
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Game_Start_Menu");
     }
 
     private void AddListenersButton()

@@ -75,7 +75,7 @@ public class PurchaserMenuHandler : MonoBehaviour
     public void ChangeItemToPurchase(int materialIndex)
     {
         SellObject sellObject = Resources.Load<SellObject>(purchaser.AvailableMaterials[materialIndex].ToString());
-        purchaser.itemToPurchase = sellObject.gameObject;
+        purchaser.itemToPurchase = sellObject;
 
         buyButtons.SetActive(true);
         AutoBuyCheckMark.gameObject.SetActive(purchaser.AutoBuy);

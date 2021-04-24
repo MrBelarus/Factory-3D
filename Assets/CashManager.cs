@@ -30,13 +30,14 @@ public class CashManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        money = SaveSystem.instance.Data.money;
     }
 
     private void Start()
     {
+        money = SaveSystem.instance.Data.money;
+
         gameUIManager = GameUIManager.instance;
+        gameUIManager.UpdateMoneyText(money);
     }
 
     public bool IsEnoughToSpend(int amountOfMoneyToSpend)
@@ -47,12 +48,12 @@ public class CashManager : MonoBehaviour
     public void Spend(int amount)
     {
         money -= amount;
-        gameUIManager.UpdateMoneyText(amount);
+        gameUIManager.UpdateMoneyText(money);
     }
 
     public void Earn(int amount)
     {
         money += amount;
-        gameUIManager.UpdateMoneyText(amount);
+        gameUIManager.UpdateMoneyText(money);
     }
 }

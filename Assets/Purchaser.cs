@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class Purchaser : FactoryObj
 {
-    public GameObject itemToPurchase;
+    public SellObject itemToPurchase;
     public Transform objSpawnPoint;
 
     public float timeToPurchaseItem;
@@ -14,19 +14,20 @@ public class Purchaser : FactoryObj
     public List<Materials> AvailableMaterials;
     public bool AutoBuy { set; get; }
 
-    private Queue<GameObject> purchaseQueue;
+    private Queue<SellObject> purchaseQueue;
     public int PurchaseQueueCount { get { return purchaseQueue.Count; } }
 
-    private void Awake()
+    private CashManager cashManager;
+
+    private new void Awake()
     {
         this.type = FactoryObjTypes.Purchaser;
 
-        purchaseQueue = new Queue<GameObject>();
-    }
+        purchaseQueue = new Queue<SellObject>();
 
-    protected new void Start()
-    {
-        base.Start();
+        cashManager = CashManager.instance;
+
+        base.Awake();
     }
 
     ////имитация покупки через UI
@@ -45,9 +46,11 @@ public class Purchaser : FactoryObj
         //autobuy implementation
         if (isNextObjFree)
         {
-            if (AutoBuy && purchaseQueue.Count == 0 && itemToPurchase)
+            if (AutoBuy && purchaseQueue.Count == 0 && itemToPurchase 
+                && cashManager.IsEnoughToSpend(itemToPurchase.cost))
             {
                 purchaseQueue.Enqueue(itemToPurchase);
+                cashManager.Spend(itemToPurchase.cost);
             }
         }
 
@@ -65,7 +68,7 @@ public class Purchaser : FactoryObj
                 print("It's purchased!");
                 itemToPurchase = purchaseQueue.Dequeue();   //inqueue if we have itemToPurchase but timer < timeToPurchaseItem
 
-                GameObject purchasedItem = Instantiate(itemToPurchase, objSpawnPoint.position, objSpawnPoint.rotation);
+                GameObject purchasedItem = Instantiate(itemToPurchase.gameObject, objSpawnPoint.position, objSpawnPoint.rotation);
                 purchasedItem.GetComponent<SellObject>().MoveTo(transform.forward, nextObj, ObjectMoveTime);
 
                 //if (purchaseQueue.Count == 0)
@@ -82,9 +85,17 @@ public class Purchaser : FactoryObj
         }
     }
 
-    public void BuyMaterial(GameObject material)
+    public void BuyMaterial(SellObject material)
     {
-        purchaseQueue.Enqueue(material);
+        if (cashManager.IsEnoughToSpend(material.cost))
+        {
+            purchaseQueue.Enqueue(material);
+            cashManager.Spend(material.cost);
+        }
+        else
+        {
+            //sound which means no money or error
+        }
 
         //first obj to buy & purchaser connected to pipeline
         //if (purchaseQueue.Count == 1 && pipeline)
@@ -95,6 +106,11 @@ public class Purchaser : FactoryObj
 
     public void ClearPurchaseQueue()
     {
+        foreach (SellObject obj in purchaseQueue)
+        {
+            cashManager.Earn(obj.cost / 2);
+        }
+
         purchaseQueue.Clear();
     }
 

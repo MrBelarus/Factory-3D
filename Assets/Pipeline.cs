@@ -17,14 +17,10 @@ public class Pipeline : FactoryObj
         get { return itemToMove == null && !isRecievingItem; }
     }
 
-    private void Awake()
+    protected new void Awake()
     {
         this.type = FactoryObjTypes.Pipeline;
-    }
-
-    protected new void Start()
-    {
-        base.Start();
+        base.Awake();
     }
 
     private void FixedUpdate()
