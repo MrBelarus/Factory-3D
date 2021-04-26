@@ -147,6 +147,7 @@ public class Factory : FactoryObj
         factoryContainer.Clear();
     }
 
+    //connections implementations will be on OnTrigger events
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.parent)
@@ -162,20 +163,19 @@ public class Factory : FactoryObj
             switch (factoryObj.type)
             {
                 case FactoryObjTypes.Pipeline:
-                    Pipeline pipeline = (Pipeline)factoryObj;
-                    pipeline.previousObjs.Add(this);
-                    nextObj = pipeline;
-                    isNextObjFree = pipeline.IsFree;
+                    factoryObj.previousObjs.Add(this);
+                    nextObj = factoryObj;
+                    isNextObjFree = factoryObj.IsFree;
                     break;
 
                 case FactoryObjTypes.Factory:
-                    Factory factory = (Factory)factoryObj;
-                    factory.previousObjs.Add(this);
-                    nextObj = factory;
-                    isNextObjFree = factory.IsFree;
+                    factoryObj.previousObjs.Add(this);
+                    nextObj = factoryObj;
+                    isNextObjFree = factoryObj.IsFree;
                     break;
 
                 case FactoryObjTypes.SellPort:
+                    factoryObj.previousObjs[0] = this;
                     nextObj = factoryObj;
                     isNextObjFree = factoryObj.IsFree;
                     break;

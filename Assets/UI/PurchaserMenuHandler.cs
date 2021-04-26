@@ -18,7 +18,8 @@ public class PurchaserMenuHandler : MonoBehaviour
 
     public void SetUpMenu(Purchaser purchaser)
     {
-        itemToBuyName.text = purchaser.itemToPurchase == null ? "Nothing" : purchaser.itemToPurchase.name;
+        itemToBuyName.text = purchaser.itemToPurchase == null ? "Nothing" 
+            : purchaser.itemToPurchase.name + " " + purchaser.itemToPurchase.cost + "$";
         itemToBuyImage.sprite = purchaser.itemToPurchase == null ? questionSprite :
             Resources.Load<Sprite>("UISprites/" + purchaser.itemToPurchase.name);
 
@@ -80,7 +81,7 @@ public class PurchaserMenuHandler : MonoBehaviour
         buyButtons.SetActive(true);
         AutoBuyCheckMark.gameObject.SetActive(purchaser.AutoBuy);
 
-        itemToBuyName.text = purchaser.itemToPurchase.name;
+        itemToBuyName.text = purchaser.itemToPurchase.name + " " + purchaser.itemToPurchase.cost + "$";
         itemToBuyImage.sprite = Resources.Load<Sprite>("UISprites/" + purchaser.itemToPurchase.name);
 
         materialsMenu.gameObject.SetActive(false);

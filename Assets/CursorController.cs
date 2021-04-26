@@ -14,11 +14,16 @@ public class CursorController : MonoBehaviour
     [SerializeField] private Transform customCursorTransform;         //it will be used
     [SerializeField] private Cursors cursorOnEnable;
 
-    private Cursors cursor;
+    private Cursors cursor = Cursors.Undefined;
     public Cursors CursorStyle
     {
         set
         {
+            if (cursor == value)
+            {
+                return;
+            }
+
             mainCursor.SetActive(false);
             transformCursor.SetActive(false);
             deleteCursor.SetActive(false);
@@ -37,6 +42,8 @@ public class CursorController : MonoBehaviour
                 default:
                     break;
             }
+
+            cursor = value;
         }
         get
         {
@@ -69,6 +76,7 @@ public class CursorController : MonoBehaviour
 
 public enum Cursors
 {
+    Undefined,
     Main,
     Delete,
     Transform

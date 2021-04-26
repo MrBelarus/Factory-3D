@@ -33,15 +33,15 @@ public class SaveSystem : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start()
-    {
-        //SaveGame();
+    //private void Start()
+    //{
+    //    //SaveGame();
 
-        foreach(string saveName in GetSaveNames())
-        {
-            print(saveName);
-        }
-    }
+    //    foreach(string saveName in GetSaveNames())
+    //    {
+    //        print(saveName);
+    //    }
+    //}
 
     private void Update()
     {
@@ -87,8 +87,6 @@ public class SaveSystem : MonoBehaviour
             file.Close();
 
             //SetupGame();
-
-            print(data.money + " " + data.saveObjects.Count);
         }
     }
 

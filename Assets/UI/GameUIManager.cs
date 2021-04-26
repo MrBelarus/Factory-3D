@@ -182,6 +182,11 @@ public class GameUIManager : MonoBehaviour
                                                             //and switched to transform
         }
 
+        if (activeMenu != null)
+        {
+            OnCloseObjMenuButtonClick(activeMenu);
+        }
+
         builder.Mode = Builder.Modes.Delete;
         //TODO: icon change
         builder.enabled = true;
@@ -194,11 +199,14 @@ public class GameUIManager : MonoBehaviour
 
     public void OnCloseObjMenuButtonClick(GameObject menu)
     {
-        menu.SetActive(false);
-
-        if (menu == activeMenu)
+        if (menu)
         {
-            activeMenu = null;
+            menu.SetActive(false);
+
+            if (menu == activeMenu)
+            {
+                activeMenu = null;
+            }
         }
 
         Time.timeScale = 1f;
@@ -217,6 +225,11 @@ public class GameUIManager : MonoBehaviour
             }
             builder.TurnOffBuilder();                       //for example if we was in delete mode 
                                                             //and switched to transform
+        }
+
+        if (activeMenu != null)
+        {
+            OnCloseObjMenuButtonClick(activeMenu);
         }
 
         builder.TransformObj(selectedObj);
@@ -256,6 +269,11 @@ public class GameUIManager : MonoBehaviour
             return;
         }
 
+        if (builder.enabled)
+        {
+            builder.TurnOffBuilder();
+        }
+
         //-> open factory Obj menu
         FactoryObjsShopMenu.SetActive(true);
         activeMenu = FactoryObjsShopMenu;
@@ -280,7 +298,6 @@ public class GameUIManager : MonoBehaviour
 
         if (gameObjectsHolder && !gameObjectsHolder.DirectionArrows)
         {
-            print("+");
             gameObjectsHolder.DirectionArrows = true;
         }
 

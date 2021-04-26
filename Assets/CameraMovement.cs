@@ -39,8 +39,8 @@ public class CameraMovement : MonoBehaviour
 
     private float deltaX, deltaY;
 
-    [SerializeField]
-    private float edgeBorderScreenX = 10f, edgeBorderScreenY = 10f;
+    //[SerializeField]
+    //private float edgeBorderScreenX = 10f, edgeBorderScreenY = 10f;
     [SerializeField]
     private float keyboardMoveSpeed = 0.1f;
     [SerializeField]
@@ -101,7 +101,8 @@ public class CameraMovement : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {
                 Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                //Cursor.visible = false;
+                CursorController.instance.CursorStyle = Cursors.Undefined;
             }
 
             cameraScript.fieldOfView += deltaY * Time.fixedDeltaTime * zoomSpeed;
@@ -123,7 +124,8 @@ public class CameraMovement : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
             Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            //Cursor.visible = true;
+            CursorController.instance.CursorStyle = Cursors.Main;
         }
         else if (Input.GetMouseButtonUp(MIDDLE_MOUSE_ID))
         {

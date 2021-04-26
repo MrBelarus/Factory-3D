@@ -53,7 +53,6 @@ public class StartMenuManager : MonoBehaviour
             return;
         }
 
-        print("+");
         string[] saves = saveSystem.GetSaveNames();
 
         ContentRect.sizeDelta = new Vector2(ContentRect.sizeDelta.x,

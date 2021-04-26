@@ -17,7 +17,36 @@ public class Builder : MonoBehaviour
         Transform,
     }
 
-    public Modes Mode { get; set; }
+    private Modes mode;
+    public Modes Mode 
+    {
+        get => mode;
+        set
+        {
+            switch (value)
+            {
+                case Modes.Undefined:
+                    cursorController.CursorStyle = Cursors.Main;
+                    break;
+                case Modes.Buy:
+                    //TODO: buy cursor
+                    break;
+                case Modes.Delete:
+                    cursorController.CursorStyle = Cursors.Delete;
+                    break;
+
+                case Modes.Transform:
+                    cursorController.CursorStyle = Cursors.Transform;
+                    break;
+
+                default:
+                    Debug.LogError("Invalid build mode!");
+                    break;
+            }
+
+            mode = value;
+        }
+    }
 
     [SerializeField]
     private float maxRayDistance = 100f;
@@ -39,13 +68,15 @@ public class Builder : MonoBehaviour
     private Vector3 objectToTransformDefaultRotation;
 
 
-    public GameObject objToReplacePrefab; //prefab
-    private GameObject objectToReplace; //instance of a prefab
+    public GameObject objToReplacePrefab;   //prefab
+    private GameObject objectToReplace;     //instance of a prefab
     private int objCost;
-    private float lastRotation = 0f;
+    private float lastRotation = 180f;      //if it's setup by defalt -> 
+                                            //it will rotate first obj to spawn by N degrees
 
     private ObjectsHolder gameObjectsHolder;
     private CashManager cashManager;
+    private CursorController cursorController;
 
     // Start is called before the first frame update
     private void Awake()
@@ -59,7 +90,7 @@ public class Builder : MonoBehaviour
             Destroy(gameObject);
         }
 
-        Mode = Modes.Undefined;
+        mode = Modes.Undefined;
         cameraMain = Camera.main;
     }
 
@@ -67,6 +98,9 @@ public class Builder : MonoBehaviour
     {
         gameObjectsHolder = ObjectsHolder.instance;
         cashManager = CashManager.instance;
+        cursorController = CursorController.instance;
+
+        this.enabled = false;
     }
 
     //check the player's input
@@ -81,7 +115,7 @@ public class Builder : MonoBehaviour
                 return;
             }
 
-            switch (Mode)
+            switch (mode)
             {
                 case Modes.Buy:
                     if (CanIReplaceIt() && cashManager.IsEnoughToSpend(objCost))
@@ -120,6 +154,7 @@ public class Builder : MonoBehaviour
                             gameObjectsHolder.DirectionArrows = false;
                         }
 
+                        Mode = Modes.Undefined;
                         objectToReplace = null;
                         this.enabled = false;
                     }
@@ -171,7 +206,7 @@ public class Builder : MonoBehaviour
     {
         if (objectToReplace)
         {
-            switch (Mode)
+            switch (mode)
             {
                 case Modes.Buy:
                     Destroy(objectToReplace);

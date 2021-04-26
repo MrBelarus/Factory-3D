@@ -56,7 +56,6 @@ public class FactoryObj : MonoBehaviour
                         nextObj.previousObjs.RemoveAt(i);
                     }
 
-                    print("ASDASDWAE21312421" + "|||  " + i);
                     break;
                 }
             }

@@ -64,7 +64,7 @@ MonoBehaviour:
   transformCursor: {fileID: 5460087932253970982}
   mainCursor: {fileID: 5460087932890975284}
   customCursorTransform: {fileID: 5460087931527025880}
-  cursorOnEnable: 0
+  cursorOnEnable: 1
 --- !u!1 &5460087932253970982
 GameObject:
   m_ObjectHideFlags: 0
