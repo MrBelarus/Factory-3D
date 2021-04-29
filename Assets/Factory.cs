@@ -1,10 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class Factory : FactoryObj
 {
+    //on factory object [Bake|Composer|Drill Machine] produces itemToProduce event
+    public static event Action<SellObject> OnFactoryObjProduced = delegate { };
+
     public List<Materials> AvailableMaterialsToProduce;
     public SellObject whatNeedToProduce;//what we should get after process iterations
 
@@ -71,6 +75,8 @@ public class Factory : FactoryObj
 
         processResult = Instantiate(result, processedObjSpawnPoint.position, 
             processedObjSpawnPoint.rotation);
+
+        OnFactoryObjProduced?.Invoke(whatNeedToProduce);
 
         isNextObjFree = nextObj != null && nextObj.IsFree;
 

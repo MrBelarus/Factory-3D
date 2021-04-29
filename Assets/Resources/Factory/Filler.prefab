@@ -131,14 +131,13 @@ MonoBehaviour:
   nextObj: {fileID: 0}
   previousObjs: []
   isNextObjFree: 1
-  ObjectMoveTime: 1.8
+  ObjectMoveTime: 1
   directionArrows:
   - {fileID: 5885366290142342265}
   - {fileID: 8828649869724301700}
   - {fileID: 947338050382906132}
-  AvailableMaterialsToProduce: 
-  whatNeedToProduce: {fileID: 1622317414031837238, guid: b642245d99aeccc4b9b26fb75df958ac,
-    type: 3}
+  AvailableMaterialsToProduce: 0c0000000d000000
+  whatNeedToProduce: {fileID: 0}
   processedObjSpawnPoint: {fileID: 4829086410908640914}
 --- !u!65 &7304824004370094275
 BoxCollider:

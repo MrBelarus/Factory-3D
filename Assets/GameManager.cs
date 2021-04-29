@@ -17,4 +17,20 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void Start()
+    {
+        IronManAchievement ironManAchievement = new IronManAchievement();
+        ironManAchievement.SubscribeEvent();
+    }
+
+    public void TestListener(SellObject obj)
+    {
+        print(obj.material + " has been produced!");
+    }
+
+    private void OnDestroy()
+    {
+        Factory.OnFactoryObjProduced -= TestListener;
+    }
 }

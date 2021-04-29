@@ -67,9 +67,9 @@ MonoBehaviour:
   material: 10
   canBeCreatedWith: 0900000009000000
   transformComponent: {fileID: 0}
-  cost: 5
+  cost: 65
   afterCreatedCostCoef: 1
-  timeToProduce: 0
+  timeToProduce: 3
   isMoving: 0
 --- !u!65 &6180396989586460301
 BoxCollider:

@@ -116,12 +116,11 @@ MonoBehaviour:
   nextObj: {fileID: 0}
   previousObjs: []
   isNextObjFree: 1
-  ObjectMoveTime: 1.8
+  ObjectMoveTime: 1
   directionArrows:
   - {fileID: 5420449208238613154}
-  AvailableMaterialsToProduce: 060000000f0000000900000008000000
-  whatNeedToProduce: {fileID: 1622317414031837238, guid: b642245d99aeccc4b9b26fb75df958ac,
-    type: 3}
+  AvailableMaterialsToProduce: 060000000f000000090000000800000007000000
+  whatNeedToProduce: {fileID: 0}
   processedObjSpawnPoint: {fileID: 4829086410908640914}
 --- !u!65 &7304824004370094275
 BoxCollider:

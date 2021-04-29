@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Purchaser : FactoryObj
 {
+    public static event Action<SellObject> OnPurchaseItemEnqueued;
+    public static event Action<SellObject> OnPurchaseItemInstantiated;
+
     public SellObject itemToPurchase;
     public Transform objSpawnPoint;
 
@@ -50,6 +53,8 @@ public class Purchaser : FactoryObj
                 && cashManager.IsEnoughToSpend(itemToPurchase.cost))
             {
                 purchaseQueue.Enqueue(itemToPurchase);
+                OnPurchaseItemEnqueued?.Invoke(itemToPurchase);
+
                 cashManager.Spend(itemToPurchase.cost);
             }
         }
@@ -71,6 +76,8 @@ public class Purchaser : FactoryObj
                 GameObject purchasedItem = Instantiate(itemToPurchase.gameObject, objSpawnPoint.position, objSpawnPoint.rotation);
                 purchasedItem.GetComponent<SellObject>().MoveTo(transform.forward, nextObj, ObjectMoveTime);
 
+                OnPurchaseItemInstantiated?.Invoke(itemToPurchase);
+
                 //if (purchaseQueue.Count == 0)
                 //{
                 //    itemToPurchase = null;
@@ -90,6 +97,8 @@ public class Purchaser : FactoryObj
         if (cashManager.IsEnoughToSpend(material.cost))
         {
             purchaseQueue.Enqueue(material);
+            OnPurchaseItemEnqueued?.Invoke(itemToPurchase);
+
             cashManager.Spend(material.cost);
         }
         else

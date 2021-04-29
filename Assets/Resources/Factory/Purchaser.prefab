@@ -330,7 +330,7 @@ MonoBehaviour:
   nextObj: {fileID: 0}
   previousObjs: []
   isNextObjFree: 1
-  ObjectMoveTime: 1.8
+  ObjectMoveTime: 1
   directionArrows:
   - {fileID: 9013222874841507264}
   itemToPurchase: {fileID: 0}

@@ -65,11 +65,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stage: 0
   material: 12
-  canBeCreatedWith: 0900000002000000020000000700000007000000
+  canBeCreatedWith: 02000000020000000700000007000000
   transformComponent: {fileID: 0}
-  cost: 5
+  cost: 165
   afterCreatedCostCoef: 1
-  timeToProduce: 0
+  timeToProduce: 1.5
   isMoving: 0
 --- !u!65 &6180396989586460301
 BoxCollider:

@@ -67,7 +67,7 @@ MonoBehaviour:
   material: 4
   canBeCreatedWith: 
   transformComponent: {fileID: 0}
-  cost: 5
+  cost: 7
   afterCreatedCostCoef: 0.8
   timeToProduce: 0
   isMoving: 0

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -6,6 +7,8 @@ using UnityEngine.EventSystems;
 public class Builder : MonoBehaviour
 {
     public static Builder instance;
+
+    public static event Action<FactoryObj> OnFactoryObjBuy;
 
     private Camera cameraMain;
 
@@ -29,7 +32,8 @@ public class Builder : MonoBehaviour
                     cursorController.CursorStyle = Cursors.Main;
                     break;
                 case Modes.Buy:
-                    //TODO: buy cursor
+                    //TODO: buy/transform cursor
+                    cursorController.CursorStyle = Cursors.Transform;
                     break;
                 case Modes.Delete:
                     cursorController.CursorStyle = Cursors.Delete;
@@ -70,7 +74,7 @@ public class Builder : MonoBehaviour
 
     public GameObject objToReplacePrefab;   //prefab
     private GameObject objectToReplace;     //instance of a prefab
-    private int objCost;
+    private FactoryObj factoryObjToBuy;
     private float lastRotation = 180f;      //if it's setup by defalt -> 
                                             //it will rotate first obj to spawn by N degrees
 
@@ -118,7 +122,7 @@ public class Builder : MonoBehaviour
             switch (mode)
             {
                 case Modes.Buy:
-                    if (CanIReplaceIt() && cashManager.IsEnoughToSpend(objCost))
+                    if (CanIReplaceIt() && cashManager.IsEnoughToSpend(factoryObjToBuy.cost))
                     {
                         //TODO: Link with cashManager
                         //if (objCost > CashManager.instance.money)
@@ -126,7 +130,9 @@ public class Builder : MonoBehaviour
                         //    return;
                         //}
 
-                        cashManager.Spend(objCost);
+                        OnFactoryObjBuy?.Invoke(factoryObjToBuy);
+
+                        cashManager.Spend(factoryObjToBuy.cost);
                         ReplaceObj();
                         CreateObjToReplace();
                     }
@@ -210,6 +216,7 @@ public class Builder : MonoBehaviour
             {
                 case Modes.Buy:
                     Destroy(objectToReplace);
+                    factoryObjToBuy = null;
                     break;
 
                 case Modes.Transform:
@@ -339,7 +346,7 @@ public class Builder : MonoBehaviour
     public void BuyFactoryObj(FactoryObj factoryObj)
     {
         objToReplacePrefab = factoryObj.gameObject;
-        objCost = factoryObj.cost;
+        factoryObjToBuy = factoryObj;
         CreateObjToReplace();
     }
 

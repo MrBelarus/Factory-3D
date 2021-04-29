@@ -24,6 +24,7 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private GameObject PurchaserMenu;
     [SerializeField] private GameObject FactoryObjsShopMenu;
     [SerializeField] private GameObject MainMenu;
+    [SerializeField] private GameObject TutorialMenu;
 
     [Header("Vars")]
     [SerializeField] private Text money;
@@ -61,6 +62,8 @@ public class GameUIManager : MonoBehaviour
         AddListenersButton();
 
         SaveSystem.instance.SetupGame();
+
+        Application.targetFrameRate = 60;
     }
 
     private void Start()
@@ -72,6 +75,12 @@ public class GameUIManager : MonoBehaviour
         builder = Builder.instance;
         gameObjectsHolder = ObjectsHolder.instance;
         mainCamera = Camera.main;
+
+        if (SaveSystem.instance.IsNewGame)
+        {
+            TutorialMenu.SetActive(true);
+            activeMenu = TutorialMenu;
+        }
     }
 
     private void Update()
@@ -197,6 +206,31 @@ public class GameUIManager : MonoBehaviour
         }
     }
 
+    public void OnTutorialButtonClick()
+    {
+        if (activeMenu == TutorialMenu)
+        {
+            OnCloseObjMenuButtonClick(activeMenu);
+            return;
+        }
+        else if (activeMenu)
+        {
+            OnCloseObjMenuButtonClick(activeMenu);
+        }
+
+        if (builder.enabled)
+        {
+            builder.TurnOffBuilder();
+        }
+
+        //-> open tutorial menu
+        TutorialMenu.SetActive(true);
+        activeMenu = TutorialMenu;
+
+        //freeze time to prevent any issues
+        Time.timeScale = 0f;
+    }
+
     public void OnCloseObjMenuButtonClick(GameObject menu)
     {
         if (menu)
@@ -250,6 +284,13 @@ public class GameUIManager : MonoBehaviour
     {
         if (selectedObj)
         {
+            //get 1/2 money back if we delete FactoryObj
+            FactoryObj factoryObj = selectedObj.GetComponent<FactoryObj>();
+            if (factoryObj)
+            {
+                CashManager.instance.Earn(factoryObj.cost / 2);
+            }
+
             Destroy(selectedObj);
         }
         else
@@ -267,6 +308,10 @@ public class GameUIManager : MonoBehaviour
         {
             OnCloseObjMenuButtonClick(activeMenu);
             return;
+        }
+        else if (activeMenu)
+        {
+            OnCloseObjMenuButtonClick(activeMenu);
         }
 
         if (builder.enabled)
@@ -310,6 +355,10 @@ public class GameUIManager : MonoBehaviour
         {
             OnCloseObjMenuButtonClick(activeMenu);
             return;
+        }
+        else if (activeMenu)
+        {
+            OnCloseObjMenuButtonClick(activeMenu);
         }
 
         //to prevent save issue when builder mode is on and temp obj saves too
