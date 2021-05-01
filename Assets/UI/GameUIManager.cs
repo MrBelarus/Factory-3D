@@ -14,7 +14,6 @@ public class GameUIManager : MonoBehaviour
     //[SerializeField] private Button DestroyButton;
     //[SerializeField] private Button MenuButton;
 
-
     private GameObject activeMenu;
     [Header("Menus:")]
     [SerializeField] private GameObject SellObjMenu;
@@ -25,6 +24,9 @@ public class GameUIManager : MonoBehaviour
     [SerializeField] private GameObject FactoryObjsShopMenu;
     [SerializeField] private GameObject MainMenu;
     [SerializeField] private GameObject TutorialMenu;
+    [SerializeField] private GameObject AchievementsMenu;
+
+    public bool IsAchievementMenuActive { get => activeMenu == AchievementsMenu; }
 
     [Header("Vars")]
     [SerializeField] private Text money;
@@ -60,10 +62,6 @@ public class GameUIManager : MonoBehaviour
         }
 
         AddListenersButton();
-
-        SaveSystem.instance.SetupGame();
-
-        Application.targetFrameRate = 60;
     }
 
     private void Start()
@@ -100,13 +98,11 @@ public class GameUIManager : MonoBehaviour
 
                 if (objLayerValue == SellObjLayer.value)
                 {
-                    print("clicked on sell obj");
                     SetUpAndOpenObjMenu(selectedObj,
                         selectedObj.GetComponent<SellObject>());
                 }
                 else if (objLayerValue == FactoryObjLayer.value)
                 {
-                    print("clicked on factory obj");
                     SetUpAndOpenObjMenu(selectedObj,
                         selectedObj.GetComponent<FactoryObj>());
                 }
@@ -114,7 +110,14 @@ public class GameUIManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && !builder.enabled)
         {
-            OnMainMenuButtonClick();
+            if (activeMenu)
+            {
+                OnCloseObjMenuButtonClick(activeMenu);
+            }
+            else
+            {
+                OnMainMenuButtonClick();
+            }
         }
     }
 
@@ -187,7 +190,7 @@ public class GameUIManager : MonoBehaviour
                 //TODO: Icon change
                 return;
             }
-            builder.TurnOffBuilder();                       //for example if we was in delete mode 
+            builder.TurnOffBuilder();                       //for example if we were in delete mode 
                                                             //and switched to transform
         }
 
@@ -231,6 +234,33 @@ public class GameUIManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
+    public void OnAchievementsButtonClick()
+    {
+        if (activeMenu == AchievementsMenu)
+        {
+            OnCloseObjMenuButtonClick(activeMenu);
+            return;
+        }
+        else if (activeMenu)
+        {
+            OnCloseObjMenuButtonClick(activeMenu);
+        }
+
+        if (builder.enabled)
+        {
+            builder.TurnOffBuilder();
+        }
+
+        //-> open tutorial menu
+        AchievementsMenu.SetActive(true);
+        AchievementController.instance.SetupAchievementsMenu();
+
+        activeMenu = AchievementsMenu;
+
+        //freeze time to prevent any issues
+        Time.timeScale = 0f;
+    }
+
     public void OnCloseObjMenuButtonClick(GameObject menu)
     {
         if (menu)
@@ -257,7 +287,7 @@ public class GameUIManager : MonoBehaviour
                 //TODO: Icon change
                 return;
             }
-            builder.TurnOffBuilder();                       //for example if we was in delete mode 
+            builder.TurnOffBuilder();                       //for example if we were in delete mode 
                                                             //and switched to transform
         }
 
@@ -332,7 +362,7 @@ public class GameUIManager : MonoBehaviour
         //if builder was active -> we disable this mode
         if (builder.enabled)
         {
-            builder.TurnOffBuilder(false);                  //for example if we was in delete mode 
+            builder.TurnOffBuilder(false);                  //for example if we were in delete mode 
                                                             //and switched to transform
         }
 

@@ -144,6 +144,8 @@ public class SaveSystem : MonoBehaviour
 
         //clear all old save objs
         data.saveObjects = new List<SaveObject>();
+        data.achievements = AchievementController.instance.achievements;
+        data.money = CashManager.instance.Money;
 
         for (int i = 0; i < factoryObjs.Count; i++)
         {
@@ -183,8 +185,6 @@ public class SaveSystem : MonoBehaviour
                 autoBuy = AutoBuy
             });
         }
-
-        data.money = CashManager.instance.Money;
     }
 
     /// <summary>
@@ -283,7 +283,7 @@ public class SaveData
     public int money = 1000;
 
     public List<SaveObject> saveObjects;
-    public List<int> unlockedAchievementsIds;
+    public Achievement[] achievements = null;
 }
 
 [System.Serializable]

@@ -138,7 +138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &162872970
 AudioListener:
   m_ObjectHideFlags: 0
@@ -295,7 +295,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &236988955
 AudioListener:
   m_ObjectHideFlags: 0
@@ -961,6 +961,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pipeline
       objectReference: {fileID: 0}
+    - target: {fileID: 8222819016941653859, guid: 1d60f3fa8c9e85a43a72943ab271cd78,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d60f3fa8c9e85a43a72943ab271cd78, type: 3}
 --- !u!1001 &1020874413
@@ -1623,7 +1628,7 @@ PrefabInstance:
     - target: {fileID: 1889946248238115151, guid: 109a43b6ebe1fc34c818a91962f7bec3,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6248570817400551022, guid: 109a43b6ebe1fc34c818a91962f7bec3,
         type: 3}

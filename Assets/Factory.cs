@@ -12,6 +12,9 @@ public class Factory : FactoryObj
     public List<Materials> AvailableMaterialsToProduce;
     public SellObject whatNeedToProduce;//what we should get after process iterations
 
+    [SerializeField] private ParticleSystem workParticles;
+    [SerializeField] private Animator workAnimation;
+
     private GameObject processResult;
     public Transform processedObjSpawnPoint;
 
@@ -68,6 +71,17 @@ public class Factory : FactoryObj
     {
         isBusy = true;
 
+        if (workParticles)
+        {
+            var main = workParticles.main;
+            main.loop = true;
+            workParticles.Play();
+        }
+        if (workAnimation)
+        {
+            workAnimation.enabled = true;
+        }
+
         yield return new WaitForSeconds(whatNeedToProduce.timeToProduce);
 
         //проверки на комбинацию из чего формируется что будет в result
@@ -77,6 +91,16 @@ public class Factory : FactoryObj
             processedObjSpawnPoint.rotation);
 
         OnFactoryObjProduced?.Invoke(whatNeedToProduce);
+
+        if (workParticles)
+        {
+            var main = workParticles.main;
+            main.loop = false;
+        }
+        if (workAnimation)
+        {
+            workAnimation.enabled = false;
+        }
 
         isNextObjFree = nextObj != null && nextObj.IsFree;
 
@@ -148,6 +172,11 @@ public class Factory : FactoryObj
         foreach (SellObject obj in factoryContainer)
         {
             cashManager.Earn(obj.cost / 2);
+        }
+
+        foreach (FactoryObj previousObj in previousObjs)
+        {
+            previousObj.isNextObjFree = true;
         }
 
         factoryContainer.Clear();

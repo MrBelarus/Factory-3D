@@ -9,6 +9,7 @@ public class Builder : MonoBehaviour
     public static Builder instance;
 
     public static event Action<FactoryObj> OnFactoryObjBuy;
+    public static event Action<FactoryObj> OnFactoryObjDeleted;
 
     private Camera cameraMain;
 
@@ -146,7 +147,12 @@ public class Builder : MonoBehaviour
                         //TODO: UI? - do u realy want to remove it
                         //TODO: Game manager? - add sell cost to player pocket
 
-                        Destroy(hit.transform.root.gameObject);
+                        FactoryObj factoryObj = hit.transform.root.gameObject.GetComponent<FactoryObj>();
+                        CashManager.instance.Earn(factoryObj.cost / 2);
+
+                        OnFactoryObjDeleted?.Invoke(factoryObj);
+
+                        Destroy(factoryObj.gameObject);
                     }
                     break;
 

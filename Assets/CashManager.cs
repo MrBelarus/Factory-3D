@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class CashManager : MonoBehaviour
 {
     public static CashManager instance;
+    public static event Action<int> OnMoneyEarned;
+    public static event Action<int> OnMoneySpent;
+    public static event Action<int> OnMoneyChanged;
 
     private int money = 0;
     public int Money 
@@ -48,12 +52,20 @@ public class CashManager : MonoBehaviour
     public void Spend(int amount)
     {
         money -= amount;
+
+        OnMoneySpent?.Invoke(amount);
+        OnMoneyChanged?.Invoke(money);
+
         gameUIManager.UpdateMoneyText(money);
     }
 
     public void Earn(int amount)
     {
         money += amount;
+
+        OnMoneyEarned?.Invoke(amount);
+        OnMoneyChanged?.Invoke(money);
+
         gameUIManager.UpdateMoneyText(money);
     }
 }

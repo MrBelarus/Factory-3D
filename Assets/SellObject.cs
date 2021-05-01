@@ -11,19 +11,23 @@ public enum Stages
     readyWithImprovements
 };
 
+[System.Serializable]
 public enum Materials   //fromPurchaser stage 
 {
     Undefined,
+    //Purchaser
     Plastic,		//model ..
     Water,			//model ..
     IronOre,		//model ..
     Sand,			//model ..
     Rubber,			//model ..
+
+    //Factory
     Bottle,			//model ..
     GlassBottle,	//model ..
     Glass,			//model ..
     Metal,			//model ..
-    Gear,           //model ..
+    Gear,           //model ..  
     Car,			//model ..
     Soda_Glass,		//model ..
     Soda_Plastic,   //model ..

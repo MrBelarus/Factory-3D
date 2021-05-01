@@ -66,13 +66,11 @@ public class Purchaser : FactoryObj
                 isNextObjFree = nextObj.IsFree;
                 if(!isNextObjFree)
                 {
-                    print("+");
                     return;
                 }
 
-                print("It's purchased!");
-                itemToPurchase = purchaseQueue.Dequeue();   //inqueue if we have itemToPurchase but timer < timeToPurchaseItem
-
+                //new temp itemToPurchase to prevent issues with autobuy
+                SellObject itemToPurchase = purchaseQueue.Dequeue();   //inqueue if we have itemToPurchase but timer < timeToPurchaseItem
                 GameObject purchasedItem = Instantiate(itemToPurchase.gameObject, objSpawnPoint.position, objSpawnPoint.rotation);
                 purchasedItem.GetComponent<SellObject>().MoveTo(transform.forward, nextObj, ObjectMoveTime);
 

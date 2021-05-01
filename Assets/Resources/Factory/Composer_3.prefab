@@ -85,6 +85,7 @@ GameObject:
   - component: {fileID: 8517483159249388574}
   - component: {fileID: 6506777133423828610}
   - component: {fileID: 7304824004370094275}
+  - component: {fileID: 433496307868851334}
   m_Layer: 9
   m_Name: Composer_3
   m_TagString: Untagged
@@ -140,6 +141,8 @@ MonoBehaviour:
   - {fileID: 454375275651438621}
   AvailableMaterialsToProduce: 0b000000
   whatNeedToProduce: {fileID: 0}
+  workParticles: {fileID: 0}
+  workAnimation: {fileID: 433496307868851334}
   processedObjSpawnPoint: {fileID: 4829086410908640914}
 --- !u!65 &7304824004370094275
 BoxCollider:
@@ -154,6 +157,25 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.25, y: 0.9, z: 0.15}
   m_Center: {x: 0, y: 0, z: 1.6}
+--- !u!95 &433496307868851334
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8517483159249388573}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2a25b4d9032394f46ae4c637c81b4827, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8517483160074889491
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,6 +492,31 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 4ba72a09ef93bf9409c2e053d7401fe6, type: 2}
+    - target: {fileID: 2084716503537433109, guid: 0319525001acf79499a17276f3abe582,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -3.7493994e-33
+      objectReference: {fileID: 0}
+    - target: {fileID: 2084716503537433109, guid: 0319525001acf79499a17276f3abe582,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -6.123234e-17
+      objectReference: {fileID: 0}
+    - target: {fileID: 2084716503537433109, guid: 0319525001acf79499a17276f3abe582,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2084716503537433109, guid: 0319525001acf79499a17276f3abe582,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 6.123234e-17
+      objectReference: {fileID: 0}
+    - target: {fileID: 2084716503537433109, guid: 0319525001acf79499a17276f3abe582,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2257207067656190097, guid: 0319525001acf79499a17276f3abe582,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

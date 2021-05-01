@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public static event Action<KeyCode, float> OnKeyPressed;
 
     private void Awake()
     {
@@ -16,21 +18,21 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        SaveSystem.instance.SetupGame();
+        Application.targetFrameRate = 60;
     }
 
-    private void Start()
+    private void Update()
     {
-        IronManAchievement ironManAchievement = new IronManAchievement();
-        ironManAchievement.SubscribeEvent();
-    }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            OnKeyPressed?.Invoke(KeyCode.F, Time.unscaledTime);
+        }
 
-    public void TestListener(SellObject obj)
-    {
-        print(obj.material + " has been produced!");
-    }
-
-    private void OnDestroy()
-    {
-        Factory.OnFactoryObjProduced -= TestListener;
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            CashManager.instance.Earn(1000);
+        }
     }
 }

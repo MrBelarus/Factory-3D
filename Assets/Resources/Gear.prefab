@@ -69,7 +69,7 @@ MonoBehaviour:
   transformComponent: {fileID: 0}
   cost: 65
   afterCreatedCostCoef: 1
-  timeToProduce: 3
+  timeToProduce: 2.167
   isMoving: 0
 --- !u!65 &6180396989586460301
 BoxCollider:

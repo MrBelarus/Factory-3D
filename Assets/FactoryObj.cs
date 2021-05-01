@@ -9,10 +9,10 @@ public class FactoryObj : MonoBehaviour
     public string prefabName;   //setups in editor for each obj
     public int cost;
 
-    public FactoryObj nextObj;
-    public List<FactoryObj> previousObjs = new List<FactoryObj>();
+    [HideInInspector] public FactoryObj nextObj;
+    [HideInInspector] public List<FactoryObj> previousObjs = new List<FactoryObj>();
+    [HideInInspector] public bool isNextObjFree = true;
 
-    public bool isNextObjFree = true;
     public float ObjectMoveTime = 5f;
 
     virtual public bool IsFree { get; set; }
@@ -68,5 +68,6 @@ public class FactoryObj : MonoBehaviour
     }
 }
 
+[System.Serializable]
 public enum FactoryObjTypes { Pipeline, Factory, Purchaser, SellPort };
 
