@@ -4761,7 +4761,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 30
   m_Viewport: {fileID: 1971408421}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 734968587}
@@ -11375,11 +11375,10 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\tPurchaser:\nHere you can buy objects which need to be processed in the
-    future.\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tIt needs to be connected with
-    atleast one pipeline!\n\tSeller:\nHere you will sell objects [processed or not],
-    it should be connected with pipeline.\n\n\tPipeline:\nPipeline will move object
-    [processed or not] foward from it's position.\n\n\tBake, Drill Machine, Filler
-    and Composers produces different kind of Sell objects.\n\n\tYou can transform
+    future.\n\t\t\t\t\t\t\t\t\t\t\t\n\tSeller:\nHere you will sell objects [processed
+    or not], it should be connected with pipeline.\n\n\tPipeline:\nPipeline will
+    move object [processed or not] foward from it's position.\n\n\tBake, Drill Machine,
+    Filler and Composers produces different kind of Sell objects.\n\n\tYou can transform
     existing Factory object by clicking on it and pressing Transform button!\n\tAlso
     you can delete them by using delete mode or clicking on factory obj and pressing
     delete button!\n\n\tDelete mode button:\t\t\t\t\t\tDelete object button: \t\t\t\t\t\tTransform

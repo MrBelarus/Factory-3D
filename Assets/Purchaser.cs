@@ -141,8 +141,20 @@ public class Purchaser : FactoryObj
                     isNextObjFree = nextObj.IsFree; //TODO: тут может быть фикс
                     break;
 
+                case FactoryObjTypes.Factory:
+                    factoryObj.previousObjs.Add(this);
+                    nextObj = factoryObj;
+                    isNextObjFree = factoryObj.IsFree;
+                    break;
+
+                case FactoryObjTypes.SellPort:
+                    factoryObj.previousObjs[0] = this;
+                    nextObj = factoryObj;
+                    isNextObjFree = factoryObj.IsFree;
+                    break;
+
                 default:
-                    Debug.LogError("error connection! [purchase can connect only with pipeline]");
+                    Debug.LogError("smth went wrong with Purchaser connection!");
                     break;
             }
         }

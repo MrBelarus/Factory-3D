@@ -197,6 +197,11 @@ public class AchievementController : MonoBehaviour
             SetupAchievementsMenu();
         }
 
+        if (AudioManager.instance)
+        {
+            AudioManager.instance.PlaySound(Sounds.AchievementRecieved);
+        }
+
         achievementObjWithAnimation.SetActive(true);
         animationIsPlaying = true;
 

@@ -27,11 +27,13 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
+            AudioManager.instance.PlaySound(Sounds.ReplaceSound);
             OnKeyPressed?.Invoke(KeyCode.F, Time.unscaledTime);
         }
 
         if (Input.GetKeyDown(KeyCode.M))
         {
+            AudioManager.instance.PlaySound(Sounds.CantReplaceHere);
             CashManager.instance.Earn(1000);
         }
     }

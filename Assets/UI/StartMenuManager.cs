@@ -17,6 +17,9 @@ public class StartMenuManager : MonoBehaviour
     [SerializeField] private Button loadSaveButton;
     [SerializeField] private float disabledButtonAlphaColor;
 
+    [Header("Settings vars")]
+    [SerializeField] private GameObject soundsToggleMark;
+
     private GameObject activeMenu = null;
 
     bool saveButtonsWereLoaded = false;
@@ -24,6 +27,14 @@ public class StartMenuManager : MonoBehaviour
     private void Start()
     {
         saveSystem = SaveSystem.instance;
+
+        if (AudioManager.instance)
+        {
+            if (AudioManager.instance.SoundsEffectsEnabled)
+            {
+                soundsToggleMark.SetActive(true);
+            }
+        }
 
         if (saveSystem.GetSaveNames().Length == 0)
         {
@@ -42,6 +53,15 @@ public class StartMenuManager : MonoBehaviour
     public void OnExitGameClick()
     {
         Application.Quit();
+    }
+
+    public void OnSoundsCheckClick()
+    {
+        if (AudioManager.instance)
+        {
+            soundsToggleMark.SetActive(!soundsToggleMark.activeSelf);
+            AudioManager.instance.SoundsEffectsEnabled = soundsToggleMark.activeSelf;
+        }
     }
 
     public void OnLoadGameClick()

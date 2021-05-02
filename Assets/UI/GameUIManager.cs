@@ -321,6 +321,11 @@ public class GameUIManager : MonoBehaviour
                 CashManager.instance.Earn(factoryObj.cost / 2);
             }
 
+            if (AudioManager.instance)
+            {
+                AudioManager.instance.PlaySound(Sounds.DeleteObj, UnityEngine.Random.Range(0.95f, 1.05f));
+            }
+
             Destroy(selectedObj);
         }
         else

@@ -37,6 +37,10 @@ public class Builder : MonoBehaviour
                     cursorController.CursorStyle = Cursors.Transform;
                     break;
                 case Modes.Delete:
+                    if (audioManager)
+                    {
+                        audioManager.PlaySound(Sounds.DeleteModeOn);
+                    }
                     cursorController.CursorStyle = Cursors.Delete;
                     break;
 
@@ -82,6 +86,7 @@ public class Builder : MonoBehaviour
     private ObjectsHolder gameObjectsHolder;
     private CashManager cashManager;
     private CursorController cursorController;
+    private AudioManager audioManager;
 
     // Start is called before the first frame update
     private void Awake()
@@ -104,6 +109,7 @@ public class Builder : MonoBehaviour
         gameObjectsHolder = ObjectsHolder.instance;
         cashManager = CashManager.instance;
         cursorController = CursorController.instance;
+        audioManager = AudioManager.instance;
 
         this.enabled = false;
     }
@@ -133,6 +139,12 @@ public class Builder : MonoBehaviour
 
                         OnFactoryObjBuy?.Invoke(factoryObjToBuy);
 
+                        if (audioManager)
+                        {
+                            audioManager.PlaySound(Sounds.BuyFactoryObjSound, UnityEngine.Random.Range(0.95f, 1.05f));
+                            audioManager.PlaySound(Sounds.ReplaceSound);
+                        }
+
                         cashManager.Spend(factoryObjToBuy.cost);
                         ReplaceObj();
                         CreateObjToReplace();
@@ -152,6 +164,11 @@ public class Builder : MonoBehaviour
 
                         OnFactoryObjDeleted?.Invoke(factoryObj);
 
+                        if (audioManager)
+                        {
+                            audioManager.PlaySound(Sounds.DeteleObjInDeleteModeSound, UnityEngine.Random.Range(0.95f, 1.05f));
+                        }
+
                         Destroy(factoryObj.gameObject);
                     }
                     break;
@@ -164,6 +181,11 @@ public class Builder : MonoBehaviour
                         if (gameObjectsHolder)
                         {
                             gameObjectsHolder.DirectionArrows = false;
+                        }
+
+                        if (audioManager)
+                        {
+                            audioManager.PlaySound(Sounds.FactoryObjTransformed);
                         }
 
                         Mode = Modes.Undefined;
@@ -321,6 +343,10 @@ public class Builder : MonoBehaviour
             if (1 << overlaps[i].gameObject.layer == SelectiveLayer.value &&
                 overlaps[i] != selectiveCol)    //ignore itself col
             {
+                if (audioManager)
+                {
+                    audioManager.PlaySound(Sounds.CantReplaceHere, UnityEngine.Random.Range(0.95f, 1.05f));
+                }
                 return false;
             }
         }
@@ -332,15 +358,25 @@ public class Builder : MonoBehaviour
                 if (overlaps[i].transform.position != objectToReplace.transform.position
                     && overlaps[i].transform.forward == -objectToReplace.transform.forward)
                 {
+                    if (audioManager)
+                    {
+                        audioManager.PlaySound(Sounds.CantReplaceHere, UnityEngine.Random.Range(0.95f, 1.05f));
+                    }
                     return false;
                 }
                 else if (overlaps[i].transform.position != objectToReplace.transform.position)
                 {
-                    if (overlaps[i].transform.root.GetComponent<FactoryObj>().type == FactoryObjTypes.Purchaser
-                        && objectToReplace.GetComponent<FactoryObj>().type != FactoryObjTypes.Pipeline)
-                    {
-                        return false;
-                    }
+                    //commented logic prevents replace if we want to connect smth to purchaser
+                    //if (overlaps[i].transform.root.GetComponent<FactoryObj>().type == FactoryObjTypes.Purchaser
+                    //    && objectToReplace.GetComponent<FactoryObj>().type != FactoryObjTypes.Pipeline)
+                    //{
+                    //    if (audioManager)
+                    //    {
+                    //        audioManager.PlaySound(Sounds.CantReplaceHere);
+                    //    }
+                    //    return false;
+                    //}
+                    //if I want to keep lines above I should also check if objToReplace = Purchaser!
                     return true;
                 }
             }
