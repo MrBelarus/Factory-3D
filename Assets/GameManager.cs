@@ -20,20 +20,21 @@ public class GameManager : MonoBehaviour
         }
 
         SaveSystem.instance.SetupGame();
-        Application.targetFrameRate = 60;
+        //Application.targetFrameRate = 60;
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            AudioManager.instance.PlaySound(Sounds.ReplaceSound);
+            //AudioManager.instance.PlaySound(Sounds.ReplaceSound);
             OnKeyPressed?.Invoke(KeyCode.F, Time.unscaledTime);
         }
 
+        //for tests
         if (Input.GetKeyDown(KeyCode.M))
         {
-            AudioManager.instance.PlaySound(Sounds.CantReplaceHere);
+            AudioManager.instance.PlaySound(Sounds.BuyFactoryObjSound, UnityEngine.Random.Range(0.85f, 1.15f));
             CashManager.instance.Earn(1000);
         }
     }

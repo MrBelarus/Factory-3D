@@ -165,7 +165,7 @@ public class Purchaser : FactoryObj
         if (other.transform.parent)
         {
             FactoryObj factoryObj = other.transform.parent.GetComponent<FactoryObj>();
-            print("Удалили объект после продавщика");
+
             if (factoryObj)
             {
                 nextObj = null;

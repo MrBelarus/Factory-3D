@@ -64,7 +64,6 @@ public class SellObject : MonoBehaviour
         if (afterCreatedCostCoef != 1f)
         {
             cost = (int)Math.Floor(cost * afterCreatedCostCoef);
-            print("произошел перерасчет стоимости");
         }
     }
 

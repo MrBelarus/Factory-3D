@@ -120,7 +120,6 @@ public class Factory : FactoryObj
         if (itemToProduceWasChanged && 
             whatNeedToProduce.canBeCreatedWith.Count(neededMat => neededMat == senderObj.material) == 0)
         {
-            print("ITEM TO PRODUCE WAS CHANGED AND SELLOBJ WAS DELIVERED BADLY SO IT'S REMOVED");
             Destroy(senderObj.gameObject);
             return;
         }

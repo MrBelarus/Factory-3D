@@ -119,12 +119,7 @@ public class AchievementController : MonoBehaviour
         {
             if (achievement.subscribeOnLoad && !achievement.achieved)
             {
-                print(achievement.title + " *Subscribed");
                 achievement.SubscribeEvent();
-            }
-            else if (achievement.subscribeOnLoad)
-            {
-                print(achievement.title + " *Already achieved");
             }
         }
     }
@@ -182,14 +177,14 @@ public class AchievementController : MonoBehaviour
 
     public void ShowAchievement(Achievement achievement)
     {
-        title.text = achievement.title;
-        description.text = achievement.description;
-
         if (animationIsPlaying)
         {
             showAchievementQueue.Enqueue(achievement);
             return;
         }
+
+        title.text = achievement.title;
+        description.text = achievement.description;
 
         if (gameUIManager && gameUIManager.IsAchievementMenuActive)
         {
@@ -206,8 +201,6 @@ public class AchievementController : MonoBehaviour
         animationIsPlaying = true;
 
         StartCoroutine(HideAchievementObjWithDelay(showAnimationClip.length + 0.05f));
-
-        print(achievement.title + " was achieved");
     }
 
     IEnumerator HideAchievementObjWithDelay(float delay)
@@ -227,7 +220,6 @@ public class AchievementController : MonoBehaviour
     {
         StopAllCoroutines();
 
-        print("Unsubscribing!");
         foreach(Achievement achievement in achievements)
         {
             achievement.UnsubscribeEvent();

@@ -29,12 +29,9 @@ public class Pipeline : FactoryObj
         {
             if (timer >= moveDelay && nextObj)
             {
-                print(itemToMove.name + " transporting by " + gameObject.name);
-
                 isNextObjFree = nextObj.IsFree;
                 if (!isNextObjFree)
                 {
-                    print("Ops, I have to wait - " + this.name);
                     return;
                 }
 
@@ -82,14 +79,10 @@ public class Pipeline : FactoryObj
         {
             isNextObjFree = false;
         }
-
-        print("узнали, занят ли след. объект? - " + isNextObjFree + "\nНа объекте - " + gameObject.name);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        print(other.name);
-
         if (other.transform.parent)
         {
             FactoryObj factoryObj = other.transform.parent.GetComponent<FactoryObj>();
