@@ -10,7 +10,19 @@ public class Factory : FactoryObj
     public static event Action<SellObject> OnFactoryObjProduced = delegate { };
 
     public List<Materials> AvailableMaterialsToProduce;
-    public SellObject whatNeedToProduce;//what we should get after process iterations
+
+    private SellObject whatNeedToProduce;   //what we should get after process iterations
+    public SellObject WhatNeedToProduce
+    {
+        set
+        {
+            whatNeedToProduce = value;
+            itemToProduceWasChanged = true;
+        }
+        get => whatNeedToProduce;
+    }
+
+    private bool itemToProduceWasChanged = false;   //IMPLEMENT WHEN WE HAVE USED THE UI CHANGE ITEM
 
     [SerializeField] private ParticleSystem workParticles;
     [SerializeField] private Animator workAnimation;
@@ -18,15 +30,13 @@ public class Factory : FactoryObj
     private GameObject processResult;
     public Transform processedObjSpawnPoint;
 
-    private bool itemToProduceWasChanged = false;   //IMPLEMENT WHEN WE HAVE USED THE UI CHANGE ITEM
-
     //container of objects (materials or components) to produce item
     private List<SellObject> factoryContainer = new List<SellObject>();
     public int MaterialsAmountIn { get { return factoryContainer.Count; } }
 
     private bool isBusy = false;
     private bool readyToProcess = false;
-    public override bool IsFree { get { return !isBusy; } }
+    public override bool IsFree { get { return !isBusy && whatNeedToProduce != null && processResult == null; } }
 
     protected new void Awake()
     {
@@ -53,7 +63,6 @@ public class Factory : FactoryObj
             if (objScript.MoveTo(processedObjSpawnPoint.forward, nextObj, ObjectMoveTime))
             {
                 processResult = null;
-                factoryContainer.Clear();
 
                 foreach (FactoryObj previousObj in previousObjs)
                 {
@@ -70,6 +79,7 @@ public class Factory : FactoryObj
     IEnumerator ProcessItem()
     {
         isBusy = true;
+        factoryContainer.Clear();
 
         if (workParticles)
         {
@@ -84,6 +94,19 @@ public class Factory : FactoryObj
 
         yield return new WaitForSeconds(whatNeedToProduce.timeToProduce);
 
+        if (itemToProduceWasChanged)
+        {
+            FinishProcess();
+
+            //оповещаем всех что мы свободны
+            foreach (FactoryObj previousObj in previousObjs)
+            {
+                previousObj.isNextObjFree = true;
+            }
+
+            yield break;
+        }
+
         //проверки на комбинацию из чего формируется что будет в result
         GameObject result = Resources.Load(whatNeedToProduce.name) as GameObject;
 
@@ -91,20 +114,7 @@ public class Factory : FactoryObj
             processedObjSpawnPoint.rotation);
 
         OnFactoryObjProduced?.Invoke(whatNeedToProduce);
-
-        if (workParticles)
-        {
-            var main = workParticles.main;
-            main.loop = false;
-        }
-        if (workAnimation)
-        {
-            workAnimation.enabled = false;
-        }
-
-        isNextObjFree = nextObj != null && nextObj.IsFree;
-
-        isBusy = false;
+        FinishProcess();
     }
 
     public void CheckIsReadyToProcess()
@@ -123,6 +133,7 @@ public class Factory : FactoryObj
             Destroy(senderObj.gameObject);
             return;
         }
+        itemToProduceWasChanged = false;
 
         Destroy(senderObj.gameObject);
         factoryContainer.Add(senderObj);
@@ -130,6 +141,11 @@ public class Factory : FactoryObj
 
     public bool CanFactoryGetObj(SellObject senderObj)
     {
+        if (isBusy)
+        {
+            return false;
+        }
+
         bool isItNeeded = false;
 
         List<Materials> neededMaterials = new List<Materials>();
@@ -181,6 +197,23 @@ public class Factory : FactoryObj
         factoryContainer.Clear();
     }
 
+    private void FinishProcess()
+    {
+        if (workParticles)
+        {
+            var main = workParticles.main;
+            main.loop = false;
+        }
+        if (workAnimation)
+        {
+            workAnimation.enabled = false;
+        }
+
+        isNextObjFree = nextObj != null && nextObj.IsFree;
+
+        isBusy = false;
+    }
+
     //connections implementations will be on OnTrigger events
     private void OnTriggerEnter(Collider other)
     {
@@ -190,7 +223,7 @@ public class Factory : FactoryObj
 
             if (factoryObj == null)
             {
-                Debug.LogWarning("smth went wrong, object: " + other.name);
+                Debug.LogError("smth went wrong, object: " + other.name);
                 return;
             }
 
@@ -239,5 +272,19 @@ public class Factory : FactoryObj
         base.OnDestroy();
 
         DetachNextWithThis();
+
+        //point below is processedObjSpawnPoint XZ. Other points is unnecessary to check 
+        //because they will be deleted automaticaly by SellObj!
+        Vector3 possibleSellObjPoint = new Vector3(processedObjSpawnPoint.position.x,
+            transform.position.y, processedObjSpawnPoint.position.z);
+
+        Collider[] overlaps = Physics.OverlapBox(possibleSellObjPoint, Vector3.one / 2.05f);
+        foreach (Collider overlap in overlaps)
+        {
+            if (overlap.CompareTag("SellObj"))
+            {
+                Destroy(overlap.gameObject);
+            }
+        }
     }
 }

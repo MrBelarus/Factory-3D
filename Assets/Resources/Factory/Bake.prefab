@@ -121,8 +121,8 @@ MonoBehaviour:
   directionArrows:
   - {fileID: 5420449208238613154}
   AvailableMaterialsToProduce: 060000000f000000090000000800000007000000
-  whatNeedToProduce: {fileID: 0}
   workParticles: {fileID: 8035416220707433433}
+  workAnimation: {fileID: 0}
   processedObjSpawnPoint: {fileID: 4829086410908640914}
 --- !u!65 &7304824004370094275
 BoxCollider:

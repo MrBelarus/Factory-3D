@@ -169,9 +169,9 @@ public class SaveSystem : MonoBehaviour
             else if (factoryObj.type == FactoryObjTypes.Factory)
             {
                 Factory factory = (Factory)factoryObj;
-                if (factory.whatNeedToProduce)
+                if (factory.WhatNeedToProduce)
                 {
-                    itemToProduce = factory.whatNeedToProduce.name;
+                    itemToProduce = factory.WhatNeedToProduce.name;
                 }
             }
 
@@ -234,7 +234,7 @@ public class SaveSystem : MonoBehaviour
             Factory factory = obj.GetComponent<Factory>();
             if (factory)
             {
-                factory.whatNeedToProduce = Resources.Load<SellObject>(saveObjects[i].itemToProducePrefabName);
+                factory.WhatNeedToProduce = Resources.Load<SellObject>(saveObjects[i].itemToProducePrefabName);
             }
 
             EnableFactoryObjColliders(obj);

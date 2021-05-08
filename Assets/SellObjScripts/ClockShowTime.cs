@@ -30,7 +30,7 @@ public class ClockShowTime : MonoBehaviour
             System.DateTime currentTime = System.DateTime.Now;
 
             float minutesAngle = currentTime.Minute * minuteDeltaAngle;
-            float hourAngle = currentTime.Hour * hourDeltaAngle;
+            float hourAngle = currentTime.Hour * hourDeltaAngle + minutesAngle / 360f * hourDeltaAngle;
             float secondsAngle = currentTime.Second * secondsDeltaAngle;
 
             secondsArrow.rotation = Quaternion.Euler(new Vector3(0f, secondsAngle, 0f));

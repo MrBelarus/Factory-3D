@@ -21,6 +21,7 @@ public class Purchaser : FactoryObj
     public int PurchaseQueueCount { get { return purchaseQueue.Count; } }
 
     private CashManager cashManager;
+    private GameObject purchasedItem;   //объект, который находится в закупщике (ждет)
 
     private new void Awake()
     {
@@ -46,9 +47,9 @@ public class Purchaser : FactoryObj
 
     private void FixedUpdate()
     {
-        //autobuy implementation
         if (isNextObjFree)
         {
+            //autobuy implementation
             if (AutoBuy && purchaseQueue.Count == 0 && itemToPurchase 
                 && cashManager.IsEnoughToSpend(itemToPurchase.cost))
             {
@@ -57,36 +58,41 @@ public class Purchaser : FactoryObj
 
                 cashManager.Spend(itemToPurchase.cost);
             }
-        }
 
-        if (isNextObjFree && purchaseQueue.Count > 0)
-        {
-            if (timer >= timeToPurchaseItem && nextObj)
+            if (purchaseQueue.Count > 0 || purchasedItem != null)
             {
-                isNextObjFree = nextObj.IsFree;
-                if(!isNextObjFree)
+                if (timer >= timeToPurchaseItem && nextObj)
                 {
-                    return;
+                    if (purchasedItem == null)
+                    {
+                        //new temp itemToPurchase to prevent issues with autobuy
+                        SellObject itemToPurchase = purchaseQueue.Dequeue();   //inqueue if we have itemToPurchase but timer < timeToPurchaseItem
+                        purchasedItem = Instantiate(itemToPurchase.gameObject, objSpawnPoint.position, objSpawnPoint.rotation);
+                        OnPurchaseItemInstantiated?.Invoke(itemToPurchase);
+                    }
+
+                    if (purchasedItem.GetComponent<SellObject>().MoveTo(transform.forward, nextObj, ObjectMoveTime))
+                    {
+                        purchasedItem = null;
+                    }
+                    else
+                    {
+                        isNextObjFree = false;
+                        return;
+                    }
+
+                    //if (purchaseQueue.Count == 0)
+                    //{
+                    //    itemToPurchase = null;
+                    //}
+
+                    timer = 0f;
                 }
 
-                //new temp itemToPurchase to prevent issues with autobuy
-                SellObject itemToPurchase = purchaseQueue.Dequeue();   //inqueue if we have itemToPurchase but timer < timeToPurchaseItem
-                GameObject purchasedItem = Instantiate(itemToPurchase.gameObject, objSpawnPoint.position, objSpawnPoint.rotation);
-                purchasedItem.GetComponent<SellObject>().MoveTo(transform.forward, nextObj, ObjectMoveTime);
+                timer += Time.deltaTime;
 
-                OnPurchaseItemInstantiated?.Invoke(itemToPurchase);
-
-                //if (purchaseQueue.Count == 0)
-                //{
-                //    itemToPurchase = null;
-                //}
-
-                timer = 0f;
+                Mathf.Clamp(timer, 0, timeToPurchaseItem + 1f);
             }
-
-            timer += Time.deltaTime;
-
-            Mathf.Clamp(timer, 0, timeToPurchaseItem + 1f);
         }
     }
 
@@ -129,7 +135,7 @@ public class Purchaser : FactoryObj
 
             if (factoryObj == null)
             {
-                Debug.LogWarning("smth went wrong, object: " + other.name);
+                Debug.LogError("smth went wrong, object: " + other.name);
                 return;
             }
 

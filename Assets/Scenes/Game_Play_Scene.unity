@@ -588,7 +588,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 158}
+  m_AnchoredPosition: {x: 0, y: 85}
   m_SizeDelta: {x: 1160, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &48736827
@@ -828,7 +828,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1088}
+  m_AnchoredPosition: {x: 0, y: 1167}
   m_SizeDelta: {x: 1160, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &79571618
@@ -3683,7 +3683,7 @@ RectTransform:
   m_Father: {fileID: 1167335648}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.70909095}
+  m_AnchorMin: {x: 0, y: 0.7257456}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
@@ -6311,7 +6311,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -592, y: 0}
-  m_SizeDelta: {x: 1184, y: 2750}
+  m_SizeDelta: {x: 1184, y: 2917}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &705507993
 GameObject:
@@ -6439,7 +6439,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1143}
+  m_AnchoredPosition: {x: 0, y: 1222}
   m_SizeDelta: {x: 1160, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &708467399
@@ -6673,7 +6673,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1334}
+  m_AnchoredPosition: {x: 0, y: 1413}
   m_SizeDelta: {x: 1180, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &719980737
@@ -6877,7 +6877,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 374852384}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.29090908
+  m_Size: 0.27425438
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -11339,8 +11339,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -578}
-  m_SizeDelta: {x: 1160, y: 766.8}
+  m_AnchoredPosition: {x: 0, y: -620}
+  m_SizeDelta: {x: 1160, y: 820.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1199563589
 MonoBehaviour:
@@ -11377,7 +11377,7 @@ MonoBehaviour:
   m_Text: "\tPurchaser:\nHere you can buy objects which need to be processed in the
     future.\n\t\t\t\t\t\t\t\t\t\t\t\n\tSeller:\nHere you will sell objects [processed
     or not], it should be connected with pipeline.\n\n\tPipeline:\nPipeline will
-    move object [processed or not] foward from it's position.\n\n\tBake, Drill Machine,
+    move object [processed or not] forward from it's position.\n\n\tBake, Drill Machine,
     Filler and Composers produces different kind of Sell objects.\n\n\tYou can transform
     existing Factory object by clicking on it and pressing Transform button!\n\tAlso
     you can delete them by using delete mode or clicking on factory obj and pressing
@@ -11386,7 +11386,10 @@ MonoBehaviour:
     you turn on build mode [by clicking on delete mode/ transform/ buy] you will
     see arrows [if there any factory objects on the grid] and red arrow is direction
     of pipeline or factory input port direction, green - factory output and it's
-    direction."
+    direction.\n\n\tTo rotate objects in the build mode use \"R\" on the Keyboard.\n\tYou
+    also can move camera by middle mouse button or \"W\", \"A\", \"S\", \"D\" on
+    the Keyboard.\n\tIf you want to change FOV use \"Left Ctrl\" + mouse movement
+    (Up/Down), \n\tto change camera view use \"Q\" and \"E\" on the Keyboard."
 --- !u!222 &1199563590
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14417,7 +14420,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -462, y: 343}
+  m_AnchoredPosition: {x: -462, y: 396.29993}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1545860761
@@ -15422,7 +15425,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1243}
+  m_AnchoredPosition: {x: 0, y: 1322}
   m_SizeDelta: {x: 1160, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1614617396
@@ -17003,7 +17006,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -462, y: 258}
+  m_AnchoredPosition: {x: -462, y: 311.3}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1828144513
@@ -18648,7 +18651,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -862, y: 343}
+  m_AnchoredPosition: {x: -862, y: 396.29993}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2060985737
@@ -19187,7 +19190,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -108, y: 343}
+  m_AnchoredPosition: {x: -108, y: 396.29993}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2144694689

@@ -90,10 +90,8 @@ public class SellObject : MonoBehaviour
     /// <summary>
     /// move obj foward 1 unit.
     /// </summary>
-    /// <param name="direction"></param>
-    /// <param name="deliver"></param>
-    /// <param name="transportTime"></param>
-    /// <returns>true if it will move & false if it's not possible</returns>
+    /// <returns>
+    /// true if call succeed</returns>
     public bool MoveTo(Vector3 direction, FactoryObj deliver, float transportTime)
     {
         if (!isMoving)
@@ -111,6 +109,13 @@ public class SellObject : MonoBehaviour
             else if (deliver.type == FactoryObjTypes.Pipeline)
             {
                 Pipeline pipeline = (Pipeline)deliver;
+
+                //double check to prevent anyIssues
+                if (!pipeline.IsFree)
+                {
+                    return false;
+                }
+
                 pipeline.isRecievingItem = true;
             }
 

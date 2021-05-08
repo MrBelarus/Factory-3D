@@ -21,11 +21,11 @@ public class FactoryMenuHandler : MonoBehaviour
         factoryName.text = factory.prefabName;
         materialsInQueueCount.text = factory.MaterialsAmountIn.ToString();
 
-        itemToProduceName.text = factory.whatNeedToProduce == null ? "Nothing" : factory.whatNeedToProduce.name;
-        itemToProduceImage.sprite = factory.whatNeedToProduce == null ? questionSprite :
-            Resources.Load<Sprite>("UISprites/" + factory.whatNeedToProduce.name);
+        itemToProduceName.text = factory.WhatNeedToProduce == null ? "Nothing" : factory.WhatNeedToProduce.name;
+        itemToProduceImage.sprite = factory.WhatNeedToProduce == null ? questionSprite :
+            Resources.Load<Sprite>("UISprites/" + factory.WhatNeedToProduce.name);
 
-        if (factory.whatNeedToProduce != null && itemToProduceImage.sprite == null)
+        if (factory.WhatNeedToProduce != null && itemToProduceImage.sprite == null)
         {
             Debug.LogError("Image was't found!");
         }
@@ -59,16 +59,15 @@ public class FactoryMenuHandler : MonoBehaviour
                 " Maybe you should change prefab name or add it to enum names!");
         }
 
-        factory.whatNeedToProduce = sellObject;
+        factory.WhatNeedToProduce = sellObject;
         itemToProduceImage.sprite = Resources.Load<Sprite>("UISprites/" + sellObject.name);
         itemToProduceName.text = sellObject.name;
 
 
         //fix when pipeline or smth waiting because next obj isn't free
-        //TODO: test it
         foreach (FactoryObj factoryObj in factory.previousObjs)
         {
-            factoryObj.isNextObjFree = true;
+            factoryObj.isNextObjFree = factory.IsFree;
         }
 
         materialsMenu.gameObject.SetActive(false);

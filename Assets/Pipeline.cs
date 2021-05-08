@@ -29,12 +29,6 @@ public class Pipeline : FactoryObj
         {
             if (timer >= moveDelay && nextObj)
             {
-                isNextObjFree = nextObj.IsFree;
-                if (!isNextObjFree)
-                {
-                    return;
-                }
-
                 if (itemToMove.MoveTo(transform.forward, nextObj, ObjectMoveTime))
                 {
                     itemToMove = null;

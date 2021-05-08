@@ -60,7 +60,6 @@ public class PurchaserBuyAchievement : Achievement
     public override void UnsubscribeEvent()
     {
         Purchaser.OnPurchaseItemEnqueued -= Logic;
-        Debug.Log(title + " was unsubscribed!");
     }
 }
 
@@ -110,7 +109,6 @@ public class FactoryProduceAchievement : Achievement
     public override void UnsubscribeEvent()
     {
         Factory.OnFactoryObjProduced -= Logic;
-        Debug.Log(title + " was unsubscribed!");
     }
 }
 
@@ -150,7 +148,6 @@ public class KeyboardAchievement : Achievement
 
         if (keyCodeToPress == (int)pressedKey && pressedTime - lastClickedTime < maxClickedTimeDelay)
         {
-            Debug.Log(pressedKey.ToString() + " pressed. Delay = " + (pressedTime - lastClickedTime) + "| lastTime = " + lastClickedTime);
             keyPressCount++;
             if (keyPressCount > keyPressGoalCount)
             {
@@ -177,7 +174,6 @@ public class KeyboardAchievement : Achievement
     public override void UnsubscribeEvent()
     {
         GameManager.OnKeyPressed -= Logic;
-        Debug.Log(title + " was unsubscribed!");
     }
 }
 
@@ -228,7 +224,6 @@ public class FactoryObjBuyAchievement : Achievement
     public override void UnsubscribeEvent()
     {
         Builder.OnFactoryObjBuy -= Logic;
-        Debug.Log(title + " was unsubscribed!");
     }
 }
 
@@ -279,7 +274,6 @@ public class FactoryObjDeleteAchievement : Achievement
     public override void UnsubscribeEvent()
     {
         Builder.OnFactoryObjDeleted -= Logic;
-        Debug.Log(title + " was unsubscribed!");
     }
 }
 
@@ -305,7 +299,6 @@ public class MoneyCountAchievement : Achievement
 
     public void Logic(int money)
     {
-        Debug.Log(description + " " + money);
         if (money >= totalMoneyGoal)
         {
             achieved = true;
@@ -334,6 +327,5 @@ public class MoneyCountAchievement : Achievement
     public override void UnsubscribeEvent()
     {
         CashManager.OnMoneyChanged -= Logic;
-        Debug.Log(title + " was unsubscribed!");
     }
 }
