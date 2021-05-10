@@ -10,10 +10,6 @@ public class GameUIManager : MonoBehaviour
 {
     public static GameUIManager instance;
 
-    //[Header("Buttons:")]
-    //[SerializeField] private Button DestroyButton;
-    //[SerializeField] private Button MenuButton;
-
     private GameObject activeMenu;
     [Header("Menus:")]
     [SerializeField] private GameObject SellObjMenu;

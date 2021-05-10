@@ -140,7 +140,6 @@ MonoBehaviour:
   - {fileID: 4662346665069211582}
   - {fileID: 454375275651438621}
   AvailableMaterialsToProduce: 0b000000
-  whatNeedToProduce: {fileID: 0}
   workParticles: {fileID: 0}
   workAnimation: {fileID: 433496307868851334}
   processedObjSpawnPoint: {fileID: 4829086410908640914}

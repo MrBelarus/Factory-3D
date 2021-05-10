@@ -120,7 +120,6 @@ MonoBehaviour:
   directionArrows:
   - {fileID: 3768461315894519416}
   AvailableMaterialsToProduce: 0a000000
-  whatNeedToProduce: {fileID: 0}
   workParticles: {fileID: 0}
   workAnimation: {fileID: 2036475143017804761}
   processedObjSpawnPoint: {fileID: 4829086410908640914}

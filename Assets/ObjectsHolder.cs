@@ -44,14 +44,6 @@ public class ObjectsHolder : MonoBehaviour //will keep factory game objs data
         DirectionArrows = false;
     }
 
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.A))
-    //    {
-    //        DirectionArrows = !arrowsOn;
-    //    }
-    //}
-
     public void AddObject(FactoryObj obj)
     {
         factoryObjs.Add(obj);

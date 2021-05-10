@@ -34,17 +34,6 @@ public class Purchaser : FactoryObj
         base.Awake();
     }
 
-    ////имитация покупки через UI
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        itemToPurchase = Resources.Load("IronOre") as GameObject;
-
-    //        BuyMaterial(itemToPurchase);
-    //    }
-    //}
-
     private void FixedUpdate()
     {
         if (isNextObjFree)
@@ -81,11 +70,6 @@ public class Purchaser : FactoryObj
                         return;
                     }
 
-                    //if (purchaseQueue.Count == 0)
-                    //{
-                    //    itemToPurchase = null;
-                    //}
-
                     timer = 0f;
                 }
 
@@ -109,12 +93,6 @@ public class Purchaser : FactoryObj
         {
             //sound which means no money or error
         }
-
-        //first obj to buy & purchaser connected to pipeline
-        //if (purchaseQueue.Count == 1 && pipeline)
-        //{
-        //    isNextObjFree = pipeline.IsFree;
-        //}
     }
 
     public void ClearPurchaseQueue()

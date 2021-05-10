@@ -28,20 +28,8 @@ public class SaveSystem : MonoBehaviour
 
         data = new SaveData();
 
-        //LoadGame("24-4-2021 & 22h 19m 0s.ftr");
-
         DontDestroyOnLoad(gameObject);
     }
-
-    //private void Start()
-    //{
-    //    //SaveGame();
-
-    //    foreach(string saveName in GetSaveNames())
-    //    {
-    //        print(saveName);
-    //    }
-    //}
 
     private void Update()
     {
@@ -85,8 +73,6 @@ public class SaveSystem : MonoBehaviour
 
             data = (SaveData)bf.Deserialize(file);
             file.Close();
-
-            //SetupGame();
         }
     }
 

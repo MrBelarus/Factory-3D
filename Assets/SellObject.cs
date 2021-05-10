@@ -186,41 +186,4 @@ public class SellObject : MonoBehaviour
 
         isMoving = false;
     }
-
-    //public SellObject Upgrade()
-    //{
-    //    return null;
-    //}
-
-    //public SellObject CombineWith(SellObject obj)
-    //{
-    //    switch(component)
-    //    {
-    //        case Components.Bottle:
-
-    //            if (obj.material == Materials.Water)
-    //            {
-    //                this.component = Components.Undefined;
-    //                this.finalItem = FinalItems.Soda;
-    //            }
-
-    //            break;
-    //        case Components.Gear:
-
-    //            if (obj.)
-
-    //            break;
-    //        case Components.Glass:
-
-    //            break;
-    //        case Components.GlassBottle:
-
-    //            break;
-    //        case Components.Metal:
-
-    //            break;
-    //    }
-
-    //    return;
-    //}
 }

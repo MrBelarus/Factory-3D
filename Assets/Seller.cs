@@ -15,18 +15,6 @@ public class Seller : FactoryObj
         get { return true; }
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    SellObject sellObj = other.GetComponent<SellObject>();
-
-    //    if (sellObj)
-    //    {
-    //        //send info to manager (cost, what and etc)
-
-    //        Destroy(sellObj.gameObject);
-    //    }
-    //}
-
     protected new void Awake()
     {
         base.Awake();

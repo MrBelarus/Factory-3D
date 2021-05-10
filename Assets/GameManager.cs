@@ -20,14 +20,12 @@ public class GameManager : MonoBehaviour
         }
 
         SaveSystem.instance.SetupGame();
-        //Application.targetFrameRate = 60;
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            //AudioManager.instance.PlaySound(Sounds.ReplaceSound);
             OnKeyPressed?.Invoke(KeyCode.F, Time.unscaledTime);
         }
 
