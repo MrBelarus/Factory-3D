@@ -8,6 +8,8 @@ public class AchievementController : MonoBehaviour
 {
     public static AchievementController instance;
 
+    [SerializeField] private bool enableDebug;
+
     [Header("UI elements and it's setup")]
     [SerializeField] private GameObject achievementObjWithAnimation;
     [SerializeField] private Text title;
@@ -120,6 +122,11 @@ public class AchievementController : MonoBehaviour
             if (achievement.subscribeOnLoad && !achievement.achieved)
             {
                 achievement.SubscribeEvent();
+
+                if (enableDebug)
+                {
+                    print(achievement.title + "was subscribed");
+                }
             }
         }
     }

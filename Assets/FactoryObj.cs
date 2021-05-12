@@ -11,7 +11,7 @@ public class FactoryObj : MonoBehaviour
 
     [HideInInspector] public FactoryObj nextObj;
     [HideInInspector] public List<FactoryObj> previousObjs = new List<FactoryObj>();
-    [HideInInspector] public bool isNextObjFree = true;
+    [HideInInspector] public bool isNextObjFree = false;
 
     public float ObjectMoveTime = 5f;
 
@@ -69,5 +69,5 @@ public class FactoryObj : MonoBehaviour
 }
 
 [System.Serializable]
-public enum FactoryObjTypes { Pipeline, Factory, Purchaser, SellPort };
+public enum FactoryObjTypes { Nothing, Pipeline, Factory, Purchaser, SellPort };
 

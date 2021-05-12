@@ -126,7 +126,6 @@ public class KeyboardAchievement : Achievement
     [System.NonSerialized]
     private float lastClickedTime;
 
-    [System.NonSerialized]
     private float maxClickedTimeDelay = 1f;
 
     public KeyboardAchievement(KeyCode keyToPress, string title,

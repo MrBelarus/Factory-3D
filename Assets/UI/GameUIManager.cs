@@ -55,6 +55,7 @@ public class GameUIManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         AddListenersButton();

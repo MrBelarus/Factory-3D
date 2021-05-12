@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         SaveSystem.instance.SetupGame();

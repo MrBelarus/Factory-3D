@@ -63,4 +63,18 @@ public class ObjectsHolder : MonoBehaviour //will keep factory game objs data
     {
         sellObjs.Remove(obj);
     }
+
+    public int GetIndexOf(FactoryObj factory)
+    {
+        for (int i = 0; i < factoryObjs.Count; i++)
+        {
+            if (factory == factoryObjs[i])
+            {
+                return i;
+            }
+        }
+
+        Debug.LogWarning("Factory wasn't found!");
+        return -1;
+    }
 }

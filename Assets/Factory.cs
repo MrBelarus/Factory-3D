@@ -28,13 +28,17 @@ public class Factory : FactoryObj
     [SerializeField] private Animator workAnimation;
 
     private GameObject processResult;
+    public GameObject ProcessResultObj { get => processResult; set => processResult = value; }
+
     public Transform processedObjSpawnPoint;
 
     //container of objects (materials or components) to produce item
     private List<SellObject> factoryContainer = new List<SellObject>();
-    public int MaterialsAmountIn { get { return factoryContainer.Count; } }
+    public int ContainerItemsAmount { get { return factoryContainer.Count; } }
+    public List<SellObject> Container { get => factoryContainer; }
 
     private bool isBusy = false;
+    public bool IsBusy { get => isBusy; }
     private bool readyToProcess = false;
     public override bool IsFree { get { return !isBusy && whatNeedToProduce != null && processResult == null; } }
 
@@ -108,7 +112,7 @@ public class Factory : FactoryObj
         }
 
         //проверки на комбинацию из чего формируется что будет в result
-        GameObject result = Resources.Load(whatNeedToProduce.name) as GameObject;
+        GameObject result = PrefabsContainer.instance.SellObjectPrefabs[whatNeedToProduce.material].gameObject;
 
         processResult = Instantiate(result, processedObjSpawnPoint.position, 
             processedObjSpawnPoint.rotation);
@@ -117,10 +121,16 @@ public class Factory : FactoryObj
         FinishProcess();
     }
 
-    public void CheckIsReadyToProcess()
+    public void CheckIsReadyToProcess(bool ignoreItemChange = false)
     {
         if (factoryContainer.Count == whatNeedToProduce.canBeCreatedWith.Count)
         {
+            //save load hack
+            if (ignoreItemChange)
+            {
+                itemToProduceWasChanged = false;
+            }
+
             readyToProcess = true;
         }
     }
@@ -197,6 +207,17 @@ public class Factory : FactoryObj
         factoryContainer.Clear();
     }
 
+    public void CopyValues(Factory factory)
+    {
+        factoryContainer = factory.factoryContainer;
+        whatNeedToProduce = factory.whatNeedToProduce;
+
+        if (factory.isBusy)
+        {
+            StartCoroutine(ProcessItem());
+        }
+    }
+
     private void FinishProcess()
     {
         if (workParticles)
@@ -270,6 +291,8 @@ public class Factory : FactoryObj
     private new void OnDestroy()
     {
         base.OnDestroy();
+
+        StopAllCoroutines();
 
         DetachNextWithThis();
 

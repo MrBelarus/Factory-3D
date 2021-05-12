@@ -31,7 +31,8 @@ public class MaterialsMenu : MonoBehaviour
 
         for (int i = 0; i < materials.Count; i++)
         {
-            GameObject obj = Instantiate(Resources.Load<GameObject>("UISprites/" + materials[i].ToString()), ContentRect);
+            GameObject obj = Instantiate(PrefabsContainer.instance.UISellObjPrefabs[materials[i].ToString()], 
+                ContentRect);
 
             RectTransform rectTransform = obj.GetComponent<RectTransform>();
             rectTransform.sizeDelta = new Vector2(itemSquareSide, itemSquareSide);

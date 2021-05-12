@@ -42,8 +42,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.2, z: 1}
-  m_Center: {x: 0, y: -0.4, z: 0}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8112821567785277946
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,12 +127,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2415ef04a84453747a74c9b092e8546d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 1
+  type: 2
   prefabName: Composer_3
   cost: 500
   nextObj: {fileID: 0}
   previousObjs: []
-  isNextObjFree: 1
+  isNextObjFree: 0
   ObjectMoveTime: 1
   directionArrows:
   - {fileID: 8223305978916878843}

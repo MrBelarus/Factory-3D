@@ -21,7 +21,7 @@ public class PurchaserMenuHandler : MonoBehaviour
         itemToBuyName.text = purchaser.itemToPurchase == null ? "Nothing" 
             : purchaser.itemToPurchase.name + " " + purchaser.itemToPurchase.cost + "$";
         itemToBuyImage.sprite = purchaser.itemToPurchase == null ? questionSprite :
-            Resources.Load<Sprite>("UISprites/" + purchaser.itemToPurchase.name);
+            PrefabsContainer.instance.SellObjSpritePrefabs[purchaser.itemToPurchase.name];
 
         buyButtons.SetActive(purchaser.itemToPurchase != null);
         AutoBuyCheckMark.gameObject.SetActive(purchaser.AutoBuy);
@@ -75,14 +75,15 @@ public class PurchaserMenuHandler : MonoBehaviour
 
     public void ChangeItemToPurchase(int materialIndex)
     {
-        SellObject sellObject = Resources.Load<SellObject>(purchaser.AvailableMaterials[materialIndex].ToString());
+        SellObject sellObject = PrefabsContainer.instance.
+            SellObjectPrefabs[purchaser.AvailableMaterials[materialIndex]];
         purchaser.itemToPurchase = sellObject;
 
         buyButtons.SetActive(true);
         AutoBuyCheckMark.gameObject.SetActive(purchaser.AutoBuy);
 
         itemToBuyName.text = purchaser.itemToPurchase.name + " " + purchaser.itemToPurchase.cost + "$";
-        itemToBuyImage.sprite = Resources.Load<Sprite>("UISprites/" + purchaser.itemToPurchase.name);
+        itemToBuyImage.sprite = PrefabsContainer.instance.SellObjSpritePrefabs[purchaser.itemToPurchase.name];
 
         materialsMenu.gameObject.SetActive(false);
         

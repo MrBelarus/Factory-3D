@@ -11,9 +11,11 @@ public class SaveSystem : MonoBehaviour
     private SaveData data;
     public SaveData Data { get => data; }
     private string currentSavePath = null;
-    
+
     private bool newGame = false;
     public bool IsNewGame { get => newGame; }
+
+    public LayerMask factoryLayer;
 
     private void Awake()
     {
@@ -24,6 +26,7 @@ public class SaveSystem : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         data = new SaveData();
@@ -57,7 +60,9 @@ public class SaveSystem : MonoBehaviour
 
             data = new SaveData();
             BinaryFormatter bf = new BinaryFormatter();
+
             bf.Serialize(file, data);
+
 
             file.Close();
         }
@@ -69,6 +74,7 @@ public class SaveSystem : MonoBehaviour
             currentSavePath = Application.persistentDataPath + "/" + fileName;
 
             FileStream file = File.Open(currentSavePath, FileMode.Open);
+
             BinaryFormatter bf = new BinaryFormatter();
 
             data = (SaveData)bf.Deserialize(file);
@@ -109,7 +115,7 @@ public class SaveSystem : MonoBehaviour
     {
         DirectoryInfo saveDir = new DirectoryInfo(Application.persistentDataPath);
         FileInfo[] saveFiles = saveDir.GetFiles("*.ftr"); //Getting Text files
-        
+
         string[] fileNames = new string[saveFiles.Length];
         for (int i = 0; i < saveFiles.Length; i++)
         {
@@ -126,51 +132,18 @@ public class SaveSystem : MonoBehaviour
     {
         //save all factory objs
         ObjectsHolder sceneObjs = ObjectsHolder.instance;
-        List<FactoryObj> factoryObjs = sceneObjs.factoryObjs;
+
 
         //clear all old save objs
-        data.saveObjects = new List<SaveObject>();
+        data.factoryObjsData = new FactoryObjectData[sceneObjs.factoryObjs.Count];
+        data.sellObjsData = new SellObjectData[sceneObjs.sellObjs.Count];
+
         data.achievements = AchievementController.instance.achievements;
         data.money = CashManager.instance.Money;
+        data.gameVersion = Application.version;
 
-        for (int i = 0; i < factoryObjs.Count; i++)
-        {
-            FactoryObj factoryObj = factoryObjs[i];
-            Vector3 pos = factoryObj.transform.position;
-            Quaternion rot = factoryObj.transform.rotation;
-
-            string itemToBuy = null;
-            string itemToProduce = null;
-            bool AutoBuy = false;
-
-            if (factoryObj.type == FactoryObjTypes.Purchaser)
-            {
-                Purchaser purchaser = (Purchaser)factoryObj;
-                if (purchaser.itemToPurchase)
-                {
-                    itemToBuy = purchaser.itemToPurchase.material.ToString();
-                }
-                AutoBuy = purchaser.AutoBuy;
-            }
-            else if (factoryObj.type == FactoryObjTypes.Factory)
-            {
-                Factory factory = (Factory)factoryObj;
-                if (factory.WhatNeedToProduce)
-                {
-                    itemToProduce = factory.WhatNeedToProduce.name;
-                }
-            }
-
-            data.saveObjects.Add(new SaveObject()
-            {
-                itemToBuyPrefabName = itemToBuy,
-                itemToProducePrefabName = itemToProduce,
-                prefabName = factoryObj.prefabName,
-                position = new float[3] { pos.x, pos.y, pos.z },
-                rotation = new float[4] { rot.x, rot.y, rot.z, rot.w },
-                autoBuy = AutoBuy
-            });
-        }
+        RefreshFactoryObjsData(sceneObjs.factoryObjs);
+        RefreshSellObjsData(sceneObjs.sellObjs);
     }
 
     /// <summary>
@@ -180,50 +153,14 @@ public class SaveSystem : MonoBehaviour
     {
         CashManager.instance.Money = data.money;
 
-        if (data.saveObjects == null)
+        if (data.factoryObjsData != null)
         {
-            return;
+            SetupFactoryObjs();
         }
 
-        GameObject[] prefabs = Resources.LoadAll<GameObject>("Factory");
-
-        int savedObjectsCount = data.saveObjects.Count;
-        float[] rot;
-        float[] pos;
-        SaveObject[] saveObjects = data.saveObjects.ToArray();
-
-        for (int i = 0; i < savedObjectsCount; i++)
+        if (data.sellObjsData != null)
         {
-            rot = saveObjects[i].rotation;
-            pos = saveObjects[i].position;
-
-            GameObject prefab = null;
-            for (int j = 0; j < prefabs.Length; j++)
-            {
-                if (prefabs[j].name == saveObjects[i].prefabName)
-                {
-                    prefab = prefabs[j];
-                }
-            }
-
-            GameObject obj = Instantiate(prefab);
-            obj.transform.rotation = new Quaternion(rot[0], rot[1], rot[2], rot[3]);
-            obj.transform.position = new Vector3(pos[0], pos[1], pos[2]);
-
-            if (prefab.name == "Purchaser" && saveObjects[i].itemToBuyPrefabName != null)
-            {
-                Purchaser purchaser = obj.GetComponent<Purchaser>();
-                purchaser.itemToPurchase = Resources.Load<SellObject>(saveObjects[i].itemToBuyPrefabName);
-                purchaser.AutoBuy = saveObjects[i].autoBuy;
-            }
-
-            Factory factory = obj.GetComponent<Factory>();
-            if (factory)
-            {
-                factory.WhatNeedToProduce = Resources.Load<SellObject>(saveObjects[i].itemToProducePrefabName);
-            }
-
-            EnableFactoryObjColliders(obj);
+            SetupSellObjs();
         }
     }
 
@@ -260,16 +197,241 @@ public class SaveSystem : MonoBehaviour
             col.enabled = true;
         }
     }
-}
 
+    private void RefreshFactoryObjsData(List<FactoryObj> factoryObjs)
+    {
+        for (int i = 0; i < factoryObjs.Count; i++)
+        {
+            FactoryObj factoryObj = factoryObjs[i];
+            Vector3 pos = factoryObj.transform.position;
+            Quaternion rot = factoryObj.transform.rotation;
+
+            Materials itemToBuy = Materials.Undefined;
+            Materials itemToProduce = Materials.Undefined;
+            bool AutoBuy = false;
+            Materials[] queue = null;
+            float buyTimer = 0f;
+
+            if (factoryObj.type == FactoryObjTypes.Purchaser)
+            {
+                Purchaser purchaser = (Purchaser)factoryObj;
+                if (purchaser.itemToPurchase)
+                {
+                    itemToBuy = purchaser.itemToPurchase.material;
+                }
+                AutoBuy = purchaser.AutoBuy;
+                queue = purchaser.MaterialsQueue;
+                buyTimer = purchaser.BuyTimer;
+            }
+            else if (factoryObj.type == FactoryObjTypes.Factory)
+            {
+                Factory factory = (Factory)factoryObj;
+                if (factory.WhatNeedToProduce)
+                {
+                    itemToProduce = factory.WhatNeedToProduce.material;
+                }
+
+                if (factory.IsBusy)
+                {
+                    queue = factory.WhatNeedToProduce.canBeCreatedWith.ToArray();
+                }
+            }
+
+            data.factoryObjsData[i] = new FactoryObjectData()
+            {
+                itemToBuy = itemToBuy,
+                itemToProduce = itemToProduce,
+                prefabName = factoryObj.prefabName,
+                position = new float[3] { pos.x, pos.y, pos.z },
+                rotation = new float[4] { rot.x, rot.y, rot.z, rot.w },
+                autoBuy = AutoBuy,
+                queue = queue,
+                buyTimer = buyTimer,
+            };
+        }
+    }
+
+    private void RefreshSellObjsData(List<SellObject> sellObjects)
+    {
+        for (int i = 0; i < sellObjects.Count; i++)
+        {
+            SellObject sellObj = sellObjects[i];
+            Vector3 pos = sellObj.transform.position;
+            Quaternion rot = sellObj.transform.rotation;
+
+
+            float[] dir = null;
+            int deliverIndex = -1;
+            bool isMoving = false;
+            if (sellObj.deliver)
+            {
+                Vector3 direction = sellObj.direction * (1 - sellObj.deliveredTimeProportion);
+                dir = new float[] { direction.x, direction.y, direction.z };
+
+                isMoving = true;
+
+                deliverIndex = ObjectsHolder.instance.GetIndexOf(sellObj.deliver);
+            }
+            else
+            {
+                Collider[] overlaps = Physics.OverlapBox(sellObj.transform.position, 
+                    Vector3.one / 2.05f, Quaternion.identity, factoryLayer);
+
+                if (overlaps.Length > 0)
+                {
+                    //берем фабрику что под SellObj чтобы привязать потом его к фабрике после загрузки
+                    deliverIndex = 
+                        ObjectsHolder.instance.GetIndexOf(overlaps[0].transform.root.GetComponent<FactoryObj>());
+
+                    isMoving = false;
+                }
+            }
+
+            data.sellObjsData[i] = new SellObjectData()
+            {
+                position = new float[3] { pos.x, pos.y, pos.z },
+                rotation = new float[4] { rot.x, rot.y, rot.z, rot.w },
+                cost = sellObj.cost,
+                isMoving = isMoving,
+                directionMove = dir,
+                factoryIndex = deliverIndex,
+                deliverTime = sellObj.deliverTimeTotal,
+                passedWayToDeliver = sellObj.deliveredTimeProportion,
+                prefabName = sellObj.material.ToString(),
+                material = sellObj.material,
+            };
+        }
+    }
+
+    private void SetupFactoryObjs()
+    {
+        int savedObjectsCount = data.factoryObjsData.Length;
+        float[] rot;
+        float[] pos;
+        FactoryObjectData[] factories = data.factoryObjsData;
+
+        for (int i = 0; i < savedObjectsCount; i++)
+        {
+            rot = factories[i].rotation;
+            pos = factories[i].position;
+
+            GameObject prefab = 
+                PrefabsContainer.instance.FactoryObjectPrefabs[factories[i].prefabName].gameObject;
+
+            GameObject obj = Instantiate(prefab);
+            obj.transform.rotation = new Quaternion(rot[0], rot[1], rot[2], rot[3]);
+            obj.transform.position = new Vector3(pos[0], pos[1], pos[2]);
+
+            FactoryObjectData factoryObjData = factories[i];
+
+            if (prefab.name == "Purchaser" && factoryObjData.itemToBuy != Materials.Undefined)
+            {
+                Purchaser purchaser = obj.GetComponent<Purchaser>();
+                purchaser.itemToPurchase =
+                    PrefabsContainer.instance.SellObjectPrefabs[factoryObjData.itemToBuy];
+                purchaser.AutoBuy = factoryObjData.autoBuy;
+                purchaser.BuyTimer = factoryObjData.buyTimer;
+
+                Materials[] queue = factoryObjData.queue;
+                for (int k = 0; k < queue.Length; k++)
+                {
+                    purchaser.PurchaseQueue.Enqueue(
+                        PrefabsContainer.instance.SellObjectPrefabs[queue[k]]);
+                }
+            }
+
+            Factory factory = obj.GetComponent<Factory>();
+            if (factory)
+            {
+                if (factoryObjData.itemToProduce != Materials.Undefined)
+                {
+                    factory.WhatNeedToProduce =
+                        PrefabsContainer.instance.SellObjectPrefabs[factoryObjData.itemToProduce];
+                }
+
+                Materials[] queue = factoryObjData.queue;
+                if (queue != null)
+                {
+                    for (int k = 0; k < queue.Length; k++)
+                    {
+                        factory.Container.Add(
+                            PrefabsContainer.instance.SellObjectPrefabs[queue[k]]);
+                    }
+                    factory.CheckIsReadyToProcess(true);
+                }
+            }
+
+            EnableFactoryObjColliders(obj);
+        }
+    }
+
+    private void SetupSellObjs()
+    {
+        int savedObjectsCount = data.sellObjsData.Length;
+        SellObjectData[] sellObjects = data.sellObjsData;
+
+        float[] rot;
+        float[] pos;
+
+        for (int i = 0; i < savedObjectsCount; i++)
+        {
+            rot = sellObjects[i].rotation;
+            pos = sellObjects[i].position;
+
+            GameObject prefab = PrefabsContainer.instance.
+                SellObjectPrefabs[sellObjects[i].material].gameObject;
+
+            GameObject obj = Instantiate(prefab);
+            obj.transform.rotation = new Quaternion(rot[0], rot[1], rot[2], rot[3]);
+            obj.transform.position = new Vector3(pos[0], pos[1], pos[2]);
+
+            SellObjectData data = sellObjects[i];
+            SellObject sellObject = obj.GetComponent<SellObject>();
+
+            if (data.isMoving)
+            {
+                float[] dir = data.directionMove;
+                Vector3 direction = new Vector3(dir[0], dir[1], dir[2]);
+
+                FactoryObj deliver = ObjectsHolder.instance.factoryObjs[data.factoryIndex];
+                sellObject.MoveTo(direction, deliver, data.deliverTime * (1 - data.passedWayToDeliver));
+            }
+            else
+            {
+                FactoryObj parent = ObjectsHolder.instance.factoryObjs[data.factoryIndex];
+
+                switch (parent.type)
+                {
+                    case FactoryObjTypes.Pipeline:
+                        Pipeline pipeline = (Pipeline)parent;
+                        pipeline.itemToMove = sellObject;
+                        break;
+
+                    case FactoryObjTypes.Factory:
+                        Factory factory = (Factory)parent;
+                        factory.ProcessResultObj = sellObject.gameObject;
+                        break;
+
+                    case FactoryObjTypes.Purchaser:
+                        Purchaser purchaser = (Purchaser)parent;
+                        purchaser.PurchasedItem = sellObject.gameObject;
+                        break;
+                }
+            }
+        }
+    }
+}
 
 [System.Serializable]
 public class SaveData
 {
     public int money = 1000;
+    public string gameVersion = "";
 
-    public List<SaveObject> saveObjects;
     public Achievement[] achievements = null;
+
+    public FactoryObjectData[] factoryObjsData;
+    public SellObjectData[] sellObjsData;
 }
 
 [System.Serializable]
@@ -279,8 +441,30 @@ public class SaveObject
     public float[] position;
 
     public string prefabName = null;
+}
 
+[System.Serializable]
+public class FactoryObjectData : SaveObject
+{
     public bool autoBuy = false;
-    public string itemToBuyPrefabName = null;
-    public string itemToProducePrefabName = null;
+    public Materials itemToBuy = Materials.Undefined;
+    public Materials itemToProduce = Materials.Undefined;
+    public Materials[] queue = null;
+    public float buyTimer = 0;
+}
+
+[System.Serializable]
+public class SellObjectData : SaveObject
+{
+    public int cost = 0;
+
+    public float[] directionMove;
+    public int factoryIndex;
+    public Materials material;
+
+    public bool isMoving = false;           //if true, 2 vars below need to be init, 
+                                            //else change FactoryObj itemHolder by factoryObjType
+
+    public float deliverTime = 0f;          //time to pass way (was init by FactoryObj)
+    public float passedWayToDeliver = 0f;   //[0..1]
 }

@@ -12,7 +12,7 @@ public class SellObjectMenuHandler : MonoBehaviour
     public void SetUpMenu(SellObject sellObject)
     {
         sellObjName.text = sellObject.material.ToString();
-        sellObjImage.sprite = Resources.Load<Sprite>("UISprites/" + sellObject.material);
+        sellObjImage.sprite = PrefabsContainer.instance.SellObjSpritePrefabs[sellObjName.text];
         sellObjCost.text = "Cost: " + sellObject.cost.ToString() + "$";
     }
 }

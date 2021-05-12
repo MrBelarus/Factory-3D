@@ -79,7 +79,7 @@ public class Builder : MonoBehaviour
 
     public GameObject objToReplacePrefab;   //prefab
     private GameObject objectToReplace;     //instance of a prefab
-    private FactoryObj factoryObjToBuy;
+    private FactoryObj factoryObjScript;
     private float lastRotation = 180f;      //if it's setup by defalt -> 
                                             //it will rotate first obj to spawn by N degrees
 
@@ -98,6 +98,7 @@ public class Builder : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         mode = Modes.Undefined;
@@ -129,15 +130,9 @@ public class Builder : MonoBehaviour
             switch (mode)
             {
                 case Modes.Buy:
-                    if (CanIReplaceIt() && cashManager.IsEnoughToSpend(factoryObjToBuy.cost))
+                    if (CanIReplaceIt() && cashManager.IsEnoughToSpend(factoryObjScript.cost))
                     {
-                        //TODO: Link with cashManager
-                        //if (objCost > CashManager.instance.money)
-                        //{
-                        //    return;
-                        //}
-
-                        OnFactoryObjBuy?.Invoke(factoryObjToBuy);
+                        OnFactoryObjBuy?.Invoke(factoryObjScript);
 
                         if (audioManager)
                         {
@@ -145,7 +140,7 @@ public class Builder : MonoBehaviour
                             audioManager.PlaySound(Sounds.ReplaceSound);
                         }
 
-                        cashManager.Spend(factoryObjToBuy.cost);
+                        cashManager.Spend(factoryObjScript.cost);
                         ReplaceObj();
                         CreateObjToReplace();
                     }
@@ -157,7 +152,6 @@ public class Builder : MonoBehaviour
                     if (Physics.Raycast(ray, out hit, maxRayDistance, SelectiveLayer))
                     {
                         //TODO: UI? - do u realy want to remove it
-                        //TODO: Game manager? - add sell cost to player pocket
 
                         FactoryObj factoryObj = hit.transform.root.gameObject.GetComponent<FactoryObj>();
                         CashManager.instance.Earn(factoryObj.cost / 2);
@@ -177,6 +171,7 @@ public class Builder : MonoBehaviour
                     if (CanIReplaceIt())
                     {
                         ReplaceObj();
+                        SetupObj();
 
                         if (gameObjectsHolder)
                         {
@@ -190,6 +185,7 @@ public class Builder : MonoBehaviour
 
                         Mode = Modes.Undefined;
                         objectToReplace = null;
+                        factoryObjScript = null;
                         this.enabled = false;
                     }
                     break;
@@ -244,13 +240,15 @@ public class Builder : MonoBehaviour
             {
                 case Modes.Buy:
                     Destroy(objectToReplace);
-                    factoryObjToBuy = null;
+                    factoryObjScript = null;
                     break;
 
                 case Modes.Transform:
                     objectToReplace.transform.position = objectToTransformDefaultPos;
                     objectToReplace.transform.rotation = Quaternion.Euler(objectToTransformDefaultRotation);
                     ReplaceObj();
+                    SetupObj();
+                    factoryObjScript = null;
                     break;
 
                 default:
@@ -388,13 +386,14 @@ public class Builder : MonoBehaviour
     public void BuyFactoryObj(FactoryObj factoryObj)
     {
         objToReplacePrefab = factoryObj.gameObject;
-        factoryObjToBuy = factoryObj;
+        factoryObjScript = factoryObj;
         CreateObjToReplace();
     }
 
     public void TransformObj(GameObject obj)
     {
-        objToReplacePrefab = Resources.Load<GameObject>("Factory/" + obj.GetComponent<FactoryObj>().prefabName);
+        FactoryObj factoryObj = obj.GetComponent<FactoryObj>();
+        objToReplacePrefab = PrefabsContainer.instance.FactoryObjectPrefabs[factoryObj.prefabName].gameObject;
         
         //save pos & rotation before deleting
         objectToTransformDefaultPos = obj.transform.position;
@@ -405,7 +404,29 @@ public class Builder : MonoBehaviour
 
         //updates objectToReplace
         CreateObjToReplace();
+        factoryObjScript = factoryObj;
 
         objectToReplace.transform.rotation = Quaternion.Euler(objectToTransformDefaultRotation);
+    }
+
+    private void SetupObj()
+    {
+        switch (factoryObjScript.type)
+        {
+            case FactoryObjTypes.Factory:
+                Factory beforeTransformFactory = (Factory)factoryObjScript;
+                Factory factory = objectToReplace.GetComponent<Factory>();
+                factory.CopyValues(beforeTransformFactory);
+                break;
+
+            case FactoryObjTypes.Purchaser:
+                Purchaser beforeTransformPurchaser = (Purchaser)factoryObjScript;
+                Purchaser purchaser = objectToReplace.GetComponent<Purchaser>();
+                purchaser.CopyValues(beforeTransformPurchaser);
+                break;
+
+            default:
+                break;
+        }
     }
 }

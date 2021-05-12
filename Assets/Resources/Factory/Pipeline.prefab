@@ -212,12 +212,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce34eb556084b164689a73c9f2602305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
+  type: 1
   prefabName: Pipeline
   cost: 25
   nextObj: {fileID: 0}
   previousObjs: []
-  isNextObjFree: 1
+  isNextObjFree: 0
   ObjectMoveTime: 1
   directionArrows:
   - {fileID: 1313735961312923656}

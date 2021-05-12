@@ -52,9 +52,14 @@ public class SellObject : MonoBehaviour
     public float timeToProduce;
     private Rigidbody rb;
 
-    public bool isMoving = false;
+    private bool isMoving = false;
 
-    private FactoryObj deliver;
+    //for save vars
+    [HideInInspector] public FactoryObj deliver;
+    [HideInInspector] public Vector3 direction;
+    [HideInInspector] public float deliverTimeTotal = 0;
+    [HideInInspector] public float deliveredTimeProportion;
+    //
 
     private void Awake()
     {
@@ -132,7 +137,12 @@ public class SellObject : MonoBehaviour
     {
         isMoving = true;
 
+        //for save
+        this.direction = direction;
+        this.deliverTimeTotal = time;
         this.deliver = deliver;
+        this.deliveredTimeProportion = 0;
+        //
 
         if (time <= 0)
         {
@@ -146,6 +156,7 @@ public class SellObject : MonoBehaviour
             for (float i = 0; i <= 1; i += Time.deltaTime / time)
             {
                 rb.MovePosition(Vector3.Lerp(currentPos, target, i));
+                this.deliveredTimeProportion = i;
                 yield return new WaitForFixedUpdate();
             }
 

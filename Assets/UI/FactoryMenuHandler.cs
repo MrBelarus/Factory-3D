@@ -19,11 +19,11 @@ public class FactoryMenuHandler : MonoBehaviour
     public void SetUpMenu(Factory factory)
     {
         factoryName.text = factory.prefabName;
-        materialsInQueueCount.text = factory.MaterialsAmountIn.ToString();
+        materialsInQueueCount.text = factory.ContainerItemsAmount.ToString();
 
         itemToProduceName.text = factory.WhatNeedToProduce == null ? "Nothing" : factory.WhatNeedToProduce.name;
         itemToProduceImage.sprite = factory.WhatNeedToProduce == null ? questionSprite :
-            Resources.Load<Sprite>("UISprites/" + factory.WhatNeedToProduce.name);
+            PrefabsContainer.instance.SellObjSpritePrefabs[itemToProduceName.text];
 
         if (factory.WhatNeedToProduce != null && itemToProduceImage.sprite == null)
         {
@@ -51,7 +51,8 @@ public class FactoryMenuHandler : MonoBehaviour
 
     public void ChangeItemToProduce(int materialIndex)
     {
-        SellObject sellObject = Resources.Load<SellObject>(factory.AvailableMaterialsToProduce[materialIndex].ToString());
+        SellObject sellObject = PrefabsContainer.instance.
+            SellObjectPrefabs[factory.AvailableMaterialsToProduce[materialIndex]];
 
         if (sellObject == null)
         {
@@ -60,7 +61,7 @@ public class FactoryMenuHandler : MonoBehaviour
         }
 
         factory.WhatNeedToProduce = sellObject;
-        itemToProduceImage.sprite = Resources.Load<Sprite>("UISprites/" + sellObject.name);
+        itemToProduceImage.sprite = PrefabsContainer.instance.SellObjSpritePrefabs[sellObject.name];
         itemToProduceName.text = sellObject.name;
 
 
@@ -82,6 +83,6 @@ public class FactoryMenuHandler : MonoBehaviour
         }
 
         factory.ClearFactoryQueue();
-        materialsInQueueCount.text = factory.MaterialsAmountIn.ToString();
+        materialsInQueueCount.text = factory.ContainerItemsAmount.ToString();
     }
 }

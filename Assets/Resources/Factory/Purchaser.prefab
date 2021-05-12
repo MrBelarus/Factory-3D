@@ -132,12 +132,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa31ce30d146614d9499962bd18cf00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
+  type: 3
   prefabName: Purchaser
   cost: 50
   nextObj: {fileID: 0}
   previousObjs: []
-  isNextObjFree: 1
+  isNextObjFree: 0
   ObjectMoveTime: 1
   directionArrows:
   - {fileID: 9013222874841507264}
@@ -200,8 +200,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.2, z: 1}
-  m_Center: {x: 0, y: -0.4, z: 0}
+  m_Size: {x: 1, y: 0.8, z: 1}
+  m_Center: {x: 0, y: -0.1, z: 0}
 --- !u!1 &6446165766182502919
 GameObject:
   m_ObjectHideFlags: 0

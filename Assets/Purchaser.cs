@@ -13,15 +13,34 @@ public class Purchaser : FactoryObj
 
     public float timeToPurchaseItem;
     private float timer = 0f;
+    //время, затраченное на покупку предмета (1с из 2с-timeToPurchaseItem, например)
+    public float BuyTimer { get => timer; set => timer = value; }
 
     public List<Materials> AvailableMaterials;
     public bool AutoBuy { set; get; }
 
     private Queue<SellObject> purchaseQueue;
+    public Queue<SellObject> PurchaseQueue { get { return purchaseQueue; } }
     public int PurchaseQueueCount { get { return purchaseQueue.Count; } }
+    public Materials[] MaterialsQueue
+    {
+        get
+        {
+            SellObject[] queue = purchaseQueue.ToArray();
+            Materials[] materials = new Materials[queue.Length];
+
+            for (int i = 0; i < queue.Length; i++)
+            {
+                materials[i] = queue[i].material;
+            }
+
+            return materials;
+        }
+    }
 
     private CashManager cashManager;
     private GameObject purchasedItem;   //объект, который находится в закупщике (ждет)
+    public GameObject PurchasedItem { get => purchasedItem; set => purchasedItem = value; }
 
     private new void Awake()
     {
@@ -103,6 +122,14 @@ public class Purchaser : FactoryObj
         }
 
         purchaseQueue.Clear();
+    }
+
+    public void CopyValues(Purchaser purchaser)
+    {
+        timer = purchaser.timer;
+        purchaseQueue = purchaser.PurchaseQueue;
+        itemToPurchase = purchaser.itemToPurchase;
+        AutoBuy = purchaser.AutoBuy;
     }
 
     private void OnTriggerEnter(Collider other)
