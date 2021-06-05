@@ -48,6 +48,7 @@ public class CameraMovement : MonoBehaviour
     private float moveCoef = 1f;
 
     private bool lockBorderMovement = false;
+    private InterpolatedTransform interpolatedTransform;
 
     //private float screenWidth, screenHeight;
     //private float mousePosMotionCoef = 1; //where to go camera (up/right = 1, down/left = -1)
@@ -59,6 +60,7 @@ public class CameraMovement : MonoBehaviour
         cameraTransform = cameraScript.transform;
 
         rb = GetComponent<Rigidbody>();
+        interpolatedTransform = GetComponent<InterpolatedTransform>();
 
         //screenWidth = Screen.width;
         //screenHeight = Screen.height;
@@ -118,6 +120,9 @@ public class CameraMovement : MonoBehaviour
                 (deltaY * cameraFowardDirection + deltaX * cameraRightDirection);
             lockBorderMovement = true;
 
+            //update func -> we don't need to interpolate it
+            interpolatedTransform.ForgetPreviousTransforms();
+
             CheckWorldBorders();
         }
 
@@ -153,24 +158,24 @@ public class CameraMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.A))
         {
-            rb.MovePosition(cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
-                * -cameraRightDirection * moveCoef);
+            cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
+                * -cameraRightDirection * moveCoef;
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            rb.MovePosition(cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
-                * cameraRightDirection * moveCoef);
+            cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
+                * cameraRightDirection * moveCoef;
         }
 
         if (Input.GetKey(KeyCode.W))
         {
-            rb.MovePosition(cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
-                * cameraFowardDirection * moveCoef);
+            cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
+                * cameraFowardDirection * moveCoef;
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            rb.MovePosition(cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
-                * -cameraFowardDirection * moveCoef);
+            cameraTransform.position += Time.deltaTime * keyboardMoveSpeed
+                * -cameraFowardDirection * moveCoef;
         }
 
         CheckWorldBorders();
@@ -255,5 +260,7 @@ public class CameraMovement : MonoBehaviour
 
         cameraFowardDirection = new Vector3(cameraFowardDirection.x, 0, cameraFowardDirection.z);
         cameraRightDirection = new Vector3(cameraFowardDirection.z, 0, -cameraFowardDirection.x);
+
+        interpolatedTransform.ForgetPreviousTransforms();
     }
 }
